@@ -9,11 +9,11 @@ import type {
 
 import type { StorageService } from "./types";
 
-import { useTransactionsState } from "./state/useTransactionsState";
-import { useTransactionsSelectors } from "./state/useTransactionsSelectors";
-import { useTransactionsMatchers } from "./state/useTransactionsMatchers";
-import { useTransactionsActions } from "./state/useTransactionsActions";
-import { useCheckTransactions } from "./state/useCheckTransactions";
+import { useTransactionsState } from "./hooks/useTransactionsState";
+import { useTransactionsSelectors } from "./hooks/useTransactionsSelectors";
+import { useTransactionsMatchers } from "./hooks/useTransactionsMatchers";
+import { useTransactionsActions } from "./hooks/useTransactionsActions";
+import { useCheckTransactions } from "./hooks/useCheckTransactions";
 
 interface Options<TransactionInfo extends BaseTransactionInfo> {
   chainId: number;
