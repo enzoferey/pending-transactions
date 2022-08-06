@@ -6,7 +6,7 @@ export interface TransactionReceipt {
   transactionHash: string;
   blockHash: string;
   blockNumber: number;
-  status?: number;
+  hadSuccess: boolean;
 }
 
 export interface BaseTransactionInfo {

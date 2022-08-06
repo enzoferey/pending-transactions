@@ -1,10 +1,16 @@
-import type { ChainTransactionsState, TransactionsState } from "../../types";
+import type {
+  BaseTransactionInfo,
+  ChainTransactionsState,
+  TransactionsState,
+} from "../../types";
 
 import { getValueOrDefault } from "../../utils/getValueOrDefault";
 
-export function getAllChainTransactions(
-  transactionsState: TransactionsState,
+export function getAllChainTransactions<
+  TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
+>(
+  transactionsState: TransactionsState<TransactionInfo>,
   chainId: number
-): ChainTransactionsState {
+): ChainTransactionsState<TransactionInfo> {
   return getValueOrDefault(transactionsState[chainId], {});
 }
