@@ -11,6 +11,8 @@ import type {
 import * as actions from "../../state/actions";
 
 import type { StorageService } from "../types";
+import { useIsOnline } from "./useIsOnline";
+import { useIsWindowActive } from "./useIsWindowActive";
 
 interface Options<TransactionInfo extends BaseTransactionInfo> {
   chainId: number;
@@ -43,7 +45,14 @@ export function useCheckTransactions<
     onFailure,
   } = options;
 
+  const isWindowActive = useIsWindowActive();
+  const isOnline = useIsOnline();
+
   React.useEffect(() => {
+    if (isWindowActive === false || isOnline === false) {
+      return;
+    }
+
     const checkAllChainTransactions = async () => {
       const allChainTransactions = getAllChainTransactions();
 
@@ -102,6 +111,8 @@ export function useCheckTransactions<
 
     checkAllChainTransactions();
   }, [
+    isWindowActive,
+    isOnline,
     chainId,
     lastBlockNumber,
     storageKey,
