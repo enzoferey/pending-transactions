@@ -8,11 +8,12 @@ import type {
   TransactionsState,
 } from "../../types";
 
+import { useIsOnline } from "../../hooks/useIsOnline";
+import { useIsWindowActive } from "../../hooks/useIsWindowActive";
+
 import * as actions from "../../state/actions";
 
 import type { StorageService } from "../types";
-import { useIsOnline } from "./useIsOnline";
-import { useIsWindowActive } from "./useIsWindowActive";
 
 interface Options<TransactionInfo extends BaseTransactionInfo> {
   chainId: number;
