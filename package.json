@@ -10,7 +10,8 @@
   "keywords": [
     "pending",
     "transactions",
-    "blockchain"
+    "blockchain",
+    "react"
   ],
   "type": "module",
   "files": [
@@ -23,10 +24,24 @@
     ".": {
       "import": "./dist/pending-transactions.js",
       "require": "./dist/pending-transactions.umd.cjs"
+    },
+    "./react": {
+      "import": "./dist/pending-transactions-react.js",
+      "require": "./dist/pending-transactions-react.umd.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/index.d.ts"
+      ],
+      "react": [
+        "./dist/react/index.d.ts"
+      ]
     }
   },
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && vite build --config vite.react.config.js --emptyOutDir false",
     "prepublishOnly": "yarn build",
     "ts:check": "tsc --noEmit",
     "format": "prettier --write .",
@@ -36,18 +51,23 @@
     "test:ci": "vitest --coverage --run"
   },
   "peerDependencies": {
-    "ethers": "^5.6.9"
+    "react": ">=18.0.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.30.7",
-    "@typescript-eslint/parser": "^5.30.7",
+    "@testing-library/react": "^13.3.0",
+    "@types/react": "^18.0.15",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
     "c8": "^7.12.0",
-    "eslint": "^8.20.0",
+    "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.5.0",
+    "jsdom": "^20.0.0",
     "prettier": "2.7.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "typescript": "^4.7.4",
-    "vite": "^3.0.2",
-    "vite-plugin-dts": "^1.4.0",
-    "vitest": "^0.18.1"
+    "vite": "^3.0.4",
+    "vite-plugin-dts": "^1.4.1",
+    "vitest": "^0.21.0"
   }
 }

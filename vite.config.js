@@ -10,9 +10,18 @@ export default defineConfig({
       name: "pending-transactions",
       fileName: "pending-transactions",
     },
+    rollupOptions: {
+      external: ["react"],
+      output: {
+        globals: {
+          react: "React",
+        },
+      },
+    },
   },
   plugins: [dts()],
   test: {
+    setupFiles: ["@testing-library/react/dont-cleanup-after-each"],
     mockReset: true,
     coverage: {
       src: ["lib"],
