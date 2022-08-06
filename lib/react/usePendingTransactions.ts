@@ -10,9 +10,23 @@ import type {
 import type { StorageService } from "./types";
 
 import { useTransactionsState } from "./hooks/useTransactionsState";
-import { useTransactionsSelectors } from "./hooks/useTransactionsSelectors";
-import { useTransactionsMatchers } from "./hooks/useTransactionsMatchers";
-import { useTransactionsActions } from "./hooks/useTransactionsActions";
+import {
+  GetAllChainTransactions,
+  GetChainTransaction,
+  useTransactionsSelectors,
+} from "./hooks/useTransactionsSelectors";
+import {
+  MatchIsTransactionPending,
+  MatchIsTransactionConfirmed,
+  useTransactionsMatchers,
+} from "./hooks/useTransactionsMatchers";
+import {
+  AddTransaction,
+  UpdateTransactionLastChecked,
+  FinalizeTransaction,
+  ClearAllChainTransactions,
+  useTransactionsActions,
+} from "./hooks/useTransactionsActions";
 import { useCheckTransactions } from "./hooks/useCheckTransactions";
 
 interface Options<TransactionInfo extends BaseTransactionInfo> {
@@ -29,6 +43,14 @@ interface Options<TransactionInfo extends BaseTransactionInfo> {
 
 interface ReturnValue<TransactionInfo extends BaseTransactionInfo> {
   state: TransactionsState<TransactionInfo>;
+  getAllChainTransactions: GetAllChainTransactions<TransactionInfo>;
+  getChainTransaction: GetChainTransaction<TransactionInfo>;
+  matchIsTransactionPending: MatchIsTransactionPending;
+  matchIsTransactionConfirmed: MatchIsTransactionConfirmed;
+  addTransaction: AddTransaction<TransactionInfo>;
+  updateTransactionLastChecked: UpdateTransactionLastChecked;
+  finalizeTransaction: FinalizeTransaction;
+  clearAllChainTransactions: ClearAllChainTransactions;
 }
 
 export function usePendingTransactions<

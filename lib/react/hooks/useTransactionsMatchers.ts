@@ -9,9 +9,9 @@ interface Options {
   chainId: number;
 }
 
-type MatchIsTransactionPending = (transactionHash: string) => boolean;
+export type MatchIsTransactionPending = (transactionHash: string) => boolean;
 
-type MatchIsTransactionConfirmed = (transactionHash: string) => boolean;
+export type MatchIsTransactionConfirmed = (transactionHash: string) => boolean;
 
 interface ReturnValue {
   matchIsTransactionPending: MatchIsTransactionPending;

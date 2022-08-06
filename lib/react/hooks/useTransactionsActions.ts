@@ -14,19 +14,19 @@ interface Options<TransactionInfo extends BaseTransactionInfo> {
   >;
 }
 
-type AddTransaction<TransactionInfo extends BaseTransactionInfo> = (
+export type AddTransaction<TransactionInfo extends BaseTransactionInfo> = (
   payloads: actions.AddTransactionPayload<TransactionInfo>
 ) => void;
 
-type UpdateTransactionLastChecked = (
+export type UpdateTransactionLastChecked = (
   payloads: actions.UpdateTransactionLastCheckedPayload
 ) => void;
 
-type FinalizeTransaction = (
+export type FinalizeTransaction = (
   payloads: actions.FinalizeTransactionPayload
 ) => void;
 
-type ClearAllChainTransactions = (
+export type ClearAllChainTransactions = (
   payloads: actions.ClearAllChainTransactionsPayload
 ) => void;
 

@@ -14,10 +14,11 @@ interface Options<TransactionInfo extends BaseTransactionInfo> {
   chainId: number;
 }
 
-type GetAllChainTransactions<TransactionInfo extends BaseTransactionInfo> =
-  () => ChainTransactionsState<TransactionInfo>;
+export type GetAllChainTransactions<
+  TransactionInfo extends BaseTransactionInfo
+> = () => ChainTransactionsState<TransactionInfo>;
 
-type GetChainTransaction<TransactionInfo extends BaseTransactionInfo> = (
+export type GetChainTransaction<TransactionInfo extends BaseTransactionInfo> = (
   transactionHash: string
 ) => Transaction<TransactionInfo> | undefined;
 
