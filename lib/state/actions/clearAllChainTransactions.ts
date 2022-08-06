@@ -1,13 +1,15 @@
-import type { TransactionsState } from "../../types";
+import type { BaseTransactionInfo, TransactionsState } from "../../types";
 
 export interface ClearAllChainTransactionsPayload {
   chainId: number;
 }
 
-export function clearAllChainTransactions(
-  transactionsState: TransactionsState,
+export function clearAllChainTransactions<
+  TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
+>(
+  transactionsState: TransactionsState<TransactionInfo>,
   payload: ClearAllChainTransactionsPayload
-): TransactionsState {
+): TransactionsState<TransactionInfo> {
   const { chainId } = payload;
 
   if (transactionsState[chainId] === undefined) {

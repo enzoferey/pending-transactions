@@ -7,17 +7,21 @@ import type {
 import { getNow } from "../../utils/getNow";
 import { getValueOrDefault } from "../../utils/getValueOrDefault";
 
-export interface AddTransactionPayload {
+export interface AddTransactionPayload<
+  TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
+> {
   chainId: number;
   from: string;
   hash: string;
-  info: BaseTransactionInfo;
+  info: TransactionInfo;
 }
 
-export function addTransaction(
-  transactionsState: TransactionsState,
-  payload: AddTransactionPayload
-): TransactionsState {
+export function addTransaction<
+  TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
+>(
+  transactionsState: TransactionsState<TransactionInfo>,
+  payload: AddTransactionPayload<TransactionInfo>
+): TransactionsState<TransactionInfo> {
   const { chainId, from, hash, info } = payload;
 
   const chainTransactions = getValueOrDefault(transactionsState[chainId], {});
@@ -26,7 +30,7 @@ export function addTransaction(
     throw Error("TRANSACTION_HASH_ALREADY_ADDED");
   }
 
-  const transaction: Transaction = {
+  const transaction: Transaction<TransactionInfo> = {
     from,
     hash,
     info,

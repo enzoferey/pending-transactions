@@ -4,6 +4,7 @@ import type {
   TransactionsState,
   ChainTransactionsState,
   Transaction,
+  BaseTransactionInfo,
 } from "../types";
 
 import * as selectors from "../state/selectors";
@@ -28,7 +29,9 @@ type MatchIsTransactionConfirmed = (
 ) => boolean;
 
 // Actions
-type AddTransaction = (payloads: actions.AddTransactionPayload) => void;
+type AddTransaction<TransactionInfo extends BaseTransactionInfo> = (
+  payloads: actions.AddTransactionPayload<TransactionInfo>
+) => void;
 type UpdateTransactionLastChecked = (
   payloads: actions.UpdateTransactionLastCheckedPayload
 ) => void;
@@ -39,20 +42,24 @@ type ClearAllChainTransactions = (
   payloads: actions.ClearAllChainTransactionsPayload
 ) => void;
 
-interface PendingTransactions {
-  state: TransactionsState;
+interface PendingTransactions<TransactionInfo extends BaseTransactionInfo> {
+  state: TransactionsState<TransactionInfo>;
   getAllChainTransactions: GetAllChainTransactions;
   getChainTransaction: GetChainTransaction;
   matchIsTransactionPending: MatchIsTransactionPending;
   matchIsTransactionConfirmed: MatchIsTransactionConfirmed;
-  addTransaction: AddTransaction;
+  addTransaction: AddTransaction<TransactionInfo>;
   updateTransactionLastChecked: UpdateTransactionLastChecked;
   finalizeTransaction: FinalizeTransaction;
   clearAllChainTransactions: ClearAllChainTransactions;
 }
 
-export function usePendingTransactions(): PendingTransactions {
-  const [state, setState] = React.useState<TransactionsState>({});
+export function usePendingTransactions<
+  TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
+>(): PendingTransactions<TransactionInfo> {
+  const [state, setState] = React.useState<TransactionsState<TransactionInfo>>(
+    {}
+  );
 
   const getAllChainTransactions = React.useCallback<GetAllChainTransactions>(
     (chainId) => {
@@ -92,7 +99,7 @@ export function usePendingTransactions(): PendingTransactions {
       [state]
     );
 
-  const addTransaction = React.useCallback<AddTransaction>(
+  const addTransaction = React.useCallback<AddTransaction<TransactionInfo>>(
     (payload) => {
       setState(actions.addTransaction(state, payload));
     },
@@ -122,7 +129,7 @@ export function usePendingTransactions(): PendingTransactions {
       [state]
     );
 
-  const value = React.useMemo<PendingTransactions>(() => {
+  const value = React.useMemo<PendingTransactions<TransactionInfo>>(() => {
     return {
       state,
       getAllChainTransactions,

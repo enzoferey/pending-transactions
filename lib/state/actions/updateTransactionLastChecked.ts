@@ -1,4 +1,4 @@
-import type { TransactionsState } from "../../types";
+import type { BaseTransactionInfo, TransactionsState } from "../../types";
 
 export interface UpdateTransactionLastCheckedPayload {
   chainId: number;
@@ -6,10 +6,12 @@ export interface UpdateTransactionLastCheckedPayload {
   blockNumber: number;
 }
 
-export function updateTransactionLastChecked(
-  transactionsState: TransactionsState,
+export function updateTransactionLastChecked<
+  TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
+>(
+  transactionsState: TransactionsState<TransactionInfo>,
   payload: UpdateTransactionLastCheckedPayload
-): TransactionsState {
+): TransactionsState<TransactionInfo> {
   const { chainId, hash, blockNumber } = payload;
 
   const chainTransactions = transactionsState[chainId];

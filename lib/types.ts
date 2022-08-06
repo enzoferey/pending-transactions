@@ -13,20 +13,26 @@ export interface BaseTransactionInfo {
   type: string;
 }
 
-export interface Transaction {
+export interface Transaction<
+  TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
+> {
   from: string;
   hash: string;
   addedTime: number;
-  info: BaseTransactionInfo;
+  info: TransactionInfo;
   lastCheckedBlockNumber?: number;
   confirmedTime?: number;
   receipt?: TransactionReceipt;
 }
 
-export interface ChainTransactionsState {
-  [transactionHash: string]: Transaction;
+export interface ChainTransactionsState<
+  TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
+> {
+  [transactionHash: string]: Transaction<TransactionInfo>;
 }
 
-export interface TransactionsState {
-  [chainId: number]: ChainTransactionsState;
+export interface TransactionsState<
+  TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
+> {
+  [chainId: number]: ChainTransactionsState<TransactionInfo>;
 }
