@@ -1,4 +1,4 @@
 export * from "./addTransaction";
-export * from "./clearAllTransactions";
+export * from "./clearAllChainTransactions";
 export * from "./finalizeTransaction";
 export * from "./updateTransactionLastChecked";

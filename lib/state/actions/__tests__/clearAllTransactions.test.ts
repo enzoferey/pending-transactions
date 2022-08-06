@@ -8,9 +8,9 @@ import {
 
 import type { ChainTransactionsState, TransactionsState } from "../../../types";
 
-import { clearAllTransactions } from "../clearAllTransactions";
+import { clearAllChainTransactions } from "../clearAllChainTransactions";
 
-describe("clearAllTransactions", () => {
+describe("clearAllChainTransactions", () => {
   describe("logic", () => {
     it("should clear all transactions for a given chain id", () => {
       const chainId = MOCK_CHAIN_ID_1;
@@ -23,7 +23,7 @@ describe("clearAllTransactions", () => {
         [chainId]: chainTransactions,
       };
 
-      const result = clearAllTransactions(transactionsState, { chainId });
+      const result = clearAllChainTransactions(transactionsState, { chainId });
 
       expect(result[chainId]).toEqual({});
     });
@@ -32,7 +32,7 @@ describe("clearAllTransactions", () => {
 
       const transactionsState: TransactionsState = {};
 
-      const result = clearAllTransactions(transactionsState, { chainId });
+      const result = clearAllChainTransactions(transactionsState, { chainId });
 
       expect(result).toBe(transactionsState);
       expect(result).toEqual({});
@@ -50,7 +50,7 @@ describe("clearAllTransactions", () => {
         [chainId]: chainTransactions,
       };
 
-      const result = clearAllTransactions(transactionsState, {
+      const result = clearAllChainTransactions(transactionsState, {
         chainId,
       });
 
@@ -67,7 +67,7 @@ describe("clearAllTransactions", () => {
         [chainId]: chainTransactions,
       };
 
-      clearAllTransactions(transactionsState, {
+      clearAllChainTransactions(transactionsState, {
         chainId,
       });
 
@@ -94,7 +94,7 @@ describe("clearAllTransactions", () => {
         [otherChainId]: otherChainTransactions,
       };
 
-      const result = clearAllTransactions(transactionsState, { chainId });
+      const result = clearAllChainTransactions(transactionsState, { chainId });
 
       expect(result[otherChainId]).toBe(otherChainTransactions);
       expect(result[otherChainId]).toEqual({

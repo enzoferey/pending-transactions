@@ -1,12 +1,12 @@
 import type { TransactionsState } from "../../types";
 
-export interface ClearAllTransactionsPayload {
+export interface ClearAllChainTransactionsPayload {
   chainId: number;
 }
 
-export function clearAllTransactions(
+export function clearAllChainTransactions(
   transactionsState: TransactionsState,
-  payload: ClearAllTransactionsPayload
+  payload: ClearAllChainTransactionsPayload
 ): TransactionsState {
   const { chainId } = payload;
 
