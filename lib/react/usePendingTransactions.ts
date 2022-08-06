@@ -13,7 +13,7 @@ import * as actions from "../state/actions";
 
 import type { StorageService } from "./types";
 
-const STORAGE_KEY = "pending-transactions-state";
+const DEFAULT_STORAGE_KEY = "pending-transactions-state";
 
 // Selectors
 type GetAllChainTransactions = (chainId: number) => ChainTransactionsState;
@@ -46,6 +46,11 @@ type ClearAllChainTransactions = (
   payloads: actions.ClearAllChainTransactionsPayload
 ) => void;
 
+interface Options {
+  storageKey?: string;
+  storageService?: StorageService;
+}
+
 interface PendingTransactions<TransactionInfo extends BaseTransactionInfo> {
   state: TransactionsState<TransactionInfo>;
   getAllChainTransactions: GetAllChainTransactions;
@@ -60,10 +65,12 @@ interface PendingTransactions<TransactionInfo extends BaseTransactionInfo> {
 
 export function usePendingTransactions<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
->(storageService?: StorageService): PendingTransactions<TransactionInfo> {
+>(options: Options): PendingTransactions<TransactionInfo> {
+  const { storageKey = DEFAULT_STORAGE_KEY, storageService } = options;
+
   const getStateFromStorageService = React.useCallback(
     (storageService: StorageService): TransactionsState<TransactionInfo> => {
-      const serializedState = storageService.getItem(STORAGE_KEY);
+      const serializedState = storageService.getItem(storageKey);
 
       if (serializedState === null) {
         return {};
@@ -100,7 +107,7 @@ export function usePendingTransactions<
     }
 
     const listener = (event: StorageEvent) => {
-      if (event.key !== STORAGE_KEY) {
+      if (event.key !== storageKey) {
         return;
       }
 
@@ -112,7 +119,7 @@ export function usePendingTransactions<
     return () => {
       window.removeEventListener("storage", listener);
     };
-  }, [storageService, getStateFromStorageService]);
+  }, [storageKey, storageService, getStateFromStorageService]);
 
   const getAllChainTransactions = React.useCallback<GetAllChainTransactions>(
     (chainId) => {
@@ -158,10 +165,10 @@ export function usePendingTransactions<
       setState(updatedState);
 
       if (storageService !== undefined) {
-        storageService.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+        storageService.setItem(storageKey, JSON.stringify(updatedState));
       }
     },
-    [state, storageService]
+    [state, storageKey, storageService]
   );
 
   const updateTransactionLastChecked =
@@ -174,10 +181,10 @@ export function usePendingTransactions<
         setState(updatedState);
 
         if (storageService !== undefined) {
-          storageService.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+          storageService.setItem(storageKey, JSON.stringify(updatedState));
         }
       },
-      [state, storageService]
+      [state, storageKey, storageService]
     );
 
   const finalizeTransaction = React.useCallback<FinalizeTransaction>(
@@ -186,10 +193,10 @@ export function usePendingTransactions<
       setState(updatedState);
 
       if (storageService !== undefined) {
-        storageService.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+        storageService.setItem(storageKey, JSON.stringify(updatedState));
       }
     },
-    [state, storageService]
+    [state, storageKey, storageService]
   );
 
   const clearAllChainTransactions =
@@ -199,10 +206,10 @@ export function usePendingTransactions<
         setState(updatedState);
 
         if (storageService !== undefined) {
-          storageService.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+          storageService.setItem(storageKey, JSON.stringify(updatedState));
         }
       },
-      [state, storageService]
+      [state, storageKey, storageService]
     );
 
   const value = React.useMemo<PendingTransactions<TransactionInfo>>(() => {
