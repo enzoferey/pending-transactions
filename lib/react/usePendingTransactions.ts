@@ -11,6 +11,10 @@ import * as selectors from "../state/selectors";
 import * as matchers from "../state/matchers";
 import * as actions from "../state/actions";
 
+import type { StorageService } from "./types";
+
+const STORAGE_KEY = "pending-transactions-state";
+
 // Selectors
 type GetAllChainTransactions = (chainId: number) => ChainTransactionsState;
 type GetChainTransaction = (
@@ -56,10 +60,59 @@ interface PendingTransactions<TransactionInfo extends BaseTransactionInfo> {
 
 export function usePendingTransactions<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
->(): PendingTransactions<TransactionInfo> {
-  const [state, setState] = React.useState<TransactionsState<TransactionInfo>>(
-    {}
+>(storageService?: StorageService): PendingTransactions<TransactionInfo> {
+  const getStateFromStorageService = React.useCallback(
+    (storageService: StorageService): TransactionsState<TransactionInfo> => {
+      const serializedState = storageService.getItem(STORAGE_KEY);
+
+      if (serializedState === null) {
+        return {};
+      }
+
+      try {
+        return JSON.parse(serializedState);
+      } catch {
+        return {};
+      }
+    },
+    []
   );
+
+  const [state, setState] = React.useState<TransactionsState<TransactionInfo>>(
+    storageService !== undefined
+      ? getStateFromStorageService(storageService)
+      : {}
+  );
+
+  // Reset state when the local storage service instance changes
+  React.useEffect(() => {
+    if (storageService === undefined) {
+      return;
+    }
+
+    setState(getStateFromStorageService(storageService));
+  }, [storageService, getStateFromStorageService]);
+
+  // Sync state when local storage key changes on other documents
+  React.useEffect(() => {
+    if (storageService === undefined) {
+      return;
+    }
+
+    const listener = (event: StorageEvent) => {
+      if (event.key !== STORAGE_KEY) {
+        return;
+      }
+
+      setState(getStateFromStorageService(storageService));
+    };
+
+    window.addEventListener("storage", listener);
+
+    return () => {
+      window.removeEventListener("storage", listener);
+    };
+  }, [storageService, getStateFromStorageService]);
 
   const getAllChainTransactions = React.useCallback<GetAllChainTransactions>(
     (chainId) => {
@@ -101,32 +154,55 @@ export function usePendingTransactions<
 
   const addTransaction = React.useCallback<AddTransaction<TransactionInfo>>(
     (payload) => {
-      setState(actions.addTransaction(state, payload));
+      const updatedState = actions.addTransaction(state, payload);
+      setState(updatedState);
+
+      if (storageService !== undefined) {
+        storageService.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+      }
     },
-    [state]
+    [state, storageService]
   );
 
   const updateTransactionLastChecked =
     React.useCallback<UpdateTransactionLastChecked>(
       (payload) => {
-        setState(actions.updateTransactionLastChecked(state, payload));
+        const updatedState = actions.updateTransactionLastChecked(
+          state,
+          payload
+        );
+        setState(updatedState);
+
+        if (storageService !== undefined) {
+          storageService.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+        }
       },
-      [state]
+      [state, storageService]
     );
 
   const finalizeTransaction = React.useCallback<FinalizeTransaction>(
     (payload) => {
-      setState(actions.finalizeTransaction(state, payload));
+      const updatedState = actions.finalizeTransaction(state, payload);
+      setState(updatedState);
+
+      if (storageService !== undefined) {
+        storageService.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+      }
     },
-    [state]
+    [state, storageService]
   );
 
   const clearAllChainTransactions =
     React.useCallback<ClearAllChainTransactions>(
       (payload) => {
-        setState(actions.clearAllChainTransactions(state, payload));
+        const updatedState = actions.clearAllChainTransactions(state, payload);
+        setState(updatedState);
+
+        if (storageService !== undefined) {
+          storageService.setItem(STORAGE_KEY, JSON.stringify(updatedState));
+        }
       },
-      [state]
+      [state, storageService]
     );
 
   const value = React.useMemo<PendingTransactions<TransactionInfo>>(() => {

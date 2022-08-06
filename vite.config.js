@@ -27,7 +27,7 @@ export default defineConfig({
       src: ["lib"],
       reporter: ["text", "lcov"],
       all: true,
-      exclude: ["lib/**/index.ts", "lib/types.ts", "*.d.ts"],
+      exclude: ["lib/**/index.ts", "lib/**/types.ts", "*.d.ts"],
       100: true,
     },
   },
