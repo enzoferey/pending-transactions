@@ -54,55 +54,64 @@ export function useCheckTransactions<
       return;
     }
 
+    const handleReceipt = (
+      transaction: Transaction<TransactionInfo>,
+      receipt: TransactionReceipt | undefined
+    ) => {
+      if (receipt === undefined) {
+        setState((currentState) => {
+          const updatedState = actions.updateTransactionLastChecked(
+            currentState,
+            {
+              chainId,
+              hash: transaction.hash,
+              blockNumber: lastBlockNumber,
+            }
+          );
+
+          if (storageKey !== undefined && storageService !== undefined) {
+            storageService.setItem(storageKey, JSON.stringify(updatedState));
+          }
+
+          return updatedState;
+        });
+      } else {
+        setState((currentState) => {
+          const updatedState = actions.finalizeTransaction(currentState, {
+            chainId,
+            hash: transaction.hash,
+            receipt,
+          });
+
+          if (storageKey !== undefined && storageService !== undefined) {
+            storageService.setItem(storageKey, JSON.stringify(updatedState));
+          }
+
+          return updatedState;
+        });
+
+        if (receipt.hadSuccess) {
+          onSuccess(transaction);
+        } else {
+          onFailure(transaction);
+        }
+      }
+    };
+
     const checkAllChainTransactions = async () => {
       const allChainTransactions = getAllChainTransactions();
 
-      const handleReceipt = (
-        transaction: Transaction<TransactionInfo>,
-        receipt: TransactionReceipt | undefined
-      ) => {
-        if (receipt === undefined) {
-          setState((currentState) => {
-            const updatedState = actions.updateTransactionLastChecked(
-              currentState,
-              {
-                chainId,
-                hash: transaction.hash,
-                blockNumber: lastBlockNumber,
-              }
-            );
-
-            if (storageKey !== undefined && storageService !== undefined) {
-              storageService.setItem(storageKey, JSON.stringify(updatedState));
-            }
-
-            return updatedState;
-          });
-        } else {
-          setState((currentState) => {
-            const updatedState = actions.finalizeTransaction(currentState, {
-              chainId,
-              hash: transaction.hash,
-              receipt,
-            });
-
-            if (storageKey !== undefined && storageService !== undefined) {
-              storageService.setItem(storageKey, JSON.stringify(updatedState));
-            }
-
-            return updatedState;
-          });
-
-          if (receipt.hadSuccess) {
-            onSuccess(transaction);
-          } else {
-            onFailure(transaction);
-          }
+      const transactionsToCheck = Object.values(allChainTransactions).filter(
+        (transaction) => {
+          return (
+            transaction.lastCheckedBlockNumber === undefined ||
+            transaction.lastCheckedBlockNumber < lastBlockNumber
+          );
         }
-      };
+      );
 
       await Promise.all(
-        Object.values(allChainTransactions).map((transaction) => {
+        transactionsToCheck.map((transaction) => {
           return getTransactionReceipt(transaction).then((receipt) => {
             handleReceipt(transaction, receipt);
           });
