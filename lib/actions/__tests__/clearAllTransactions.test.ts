@@ -11,63 +11,95 @@ import type { ChainTransactionsState, TransactionsState } from "../../types";
 import { clearAllTransactions } from "../clearAllTransactions";
 
 describe("clearAllTransactions", () => {
-  it("should clear all transactions for a given chain id", () => {
-    const chainId = MOCK_CHAIN_ID_1;
+  describe("logic", () => {
+    it("should clear all transactions for a given chain id", () => {
+      const chainId = MOCK_CHAIN_ID_1;
 
-    const chainTransactions: ChainTransactionsState = {
-      [MOCK_TRANSACTION.hash]: MOCK_TRANSACTION,
-    };
-
-    const transactionsState: TransactionsState = {
-      [chainId]: chainTransactions,
-    };
-
-    clearAllTransactions(transactionsState, { chainId });
-
-    expect(transactionsState[chainId]).toEqual({});
-  });
-  it("should mutate the chain transaction state for the given chain", () => {
-    const chainId = MOCK_CHAIN_ID_1;
-
-    const chainTransactions: ChainTransactionsState = {
-      [MOCK_TRANSACTION.hash]: MOCK_TRANSACTION,
-    };
-
-    const transactionsState: TransactionsState = {
-      [chainId]: chainTransactions,
-    };
-
-    clearAllTransactions(transactionsState, { chainId });
-
-    expect(transactionsState[chainId]).not.toBe(chainTransactions);
-  });
-  it("should not clear transactions of other chains nor change their reference", () => {
-    const chainId = MOCK_CHAIN_ID_1;
-    const otherChainId = MOCK_CHAIN_ID_2;
-
-    const otherChainTransactions: ChainTransactionsState = {
-      [MOCK_TRANSACTION.hash]: MOCK_TRANSACTION,
-    };
-
-    const transactionsState: TransactionsState = {
-      [chainId]: {
+      const chainTransactions: ChainTransactionsState = {
         [MOCK_TRANSACTION.hash]: MOCK_TRANSACTION,
-      },
-      [otherChainId]: otherChainTransactions,
-    };
+      };
 
-    clearAllTransactions(transactionsState, { chainId });
+      const transactionsState: TransactionsState = {
+        [chainId]: chainTransactions,
+      };
 
-    expect(transactionsState[otherChainId]).not.toEqual({});
-    expect(transactionsState[otherChainId]).toBe(otherChainTransactions);
+      const result = clearAllTransactions(transactionsState, { chainId });
+
+      expect(result[chainId]).toEqual({});
+    });
+    it("should do nothing if there are no transactions for the given chain id", () => {
+      const chainId = MOCK_CHAIN_ID_1;
+
+      const transactionsState: TransactionsState = {};
+
+      const result = clearAllTransactions(transactionsState, { chainId });
+
+      expect(result).toBe(transactionsState);
+      expect(result).toEqual({});
+    });
   });
-  it("should do nothing if there are no transactions for the given chain id", () => {
-    const chainId = MOCK_CHAIN_ID_1;
+  describe("pureness", () => {
+    it("should return a new state object", () => {
+      const chainId = MOCK_CHAIN_ID_1;
 
-    const transactionsState: TransactionsState = {};
+      const chainTransactions: ChainTransactionsState = {
+        [MOCK_TRANSACTION.hash]: MOCK_TRANSACTION,
+      };
 
-    clearAllTransactions(transactionsState, { chainId });
+      const transactionsState: TransactionsState = {
+        [chainId]: chainTransactions,
+      };
 
-    expect(transactionsState[chainId]).toBe(undefined);
+      const result = clearAllTransactions(transactionsState, {
+        chainId,
+      });
+
+      expect(result).not.toBe(transactionsState);
+    });
+    it("should not mutate the received state", () => {
+      const chainId = MOCK_CHAIN_ID_1;
+
+      const chainTransactions: ChainTransactionsState = {
+        [MOCK_TRANSACTION.hash]: MOCK_TRANSACTION,
+      };
+
+      const transactionsState: TransactionsState = {
+        [chainId]: chainTransactions,
+      };
+
+      clearAllTransactions(transactionsState, {
+        chainId,
+      });
+
+      expect(transactionsState).toEqual({
+        [chainId]: chainTransactions,
+      });
+      expect(chainTransactions).toEqual({
+        [MOCK_TRANSACTION.hash]: MOCK_TRANSACTION,
+      });
+    });
+    it("should not mutate transactions of other chains neither in value nor in reference", () => {
+      const chainId = MOCK_CHAIN_ID_1;
+      const otherChainId = MOCK_CHAIN_ID_2;
+
+      const chainTransactions: ChainTransactionsState = {
+        [MOCK_TRANSACTION.hash]: MOCK_TRANSACTION,
+      };
+      const otherChainTransactions: ChainTransactionsState = {
+        [MOCK_TRANSACTION.hash]: MOCK_TRANSACTION,
+      };
+
+      const transactionsState: TransactionsState = {
+        [chainId]: chainTransactions,
+        [otherChainId]: otherChainTransactions,
+      };
+
+      const result = clearAllTransactions(transactionsState, { chainId });
+
+      expect(result[otherChainId]).toBe(otherChainTransactions);
+      expect(result[otherChainId]).toEqual({
+        [MOCK_TRANSACTION.hash]: MOCK_TRANSACTION,
+      });
+    });
   });
 });

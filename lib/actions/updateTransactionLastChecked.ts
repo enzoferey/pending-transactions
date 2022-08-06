@@ -9,33 +9,34 @@ export interface UpdateTransactionLastCheckedPayload {
 export function updateTransactionLastChecked(
   transactionsState: TransactionsState,
   payload: UpdateTransactionLastCheckedPayload
-) {
+): TransactionsState {
   const { chainId, hash, blockNumber } = payload;
 
   const chainTransactions = transactionsState[chainId];
 
   if (chainTransactions === undefined) {
-    return;
+    return transactionsState;
   }
 
   const transaction = chainTransactions[hash];
 
   if (transaction === undefined) {
-    return;
+    return transactionsState;
   }
 
-  if (transaction.lastCheckedBlockNumber === undefined) {
-    chainTransactions[hash] = {
-      ...transaction,
-      lastCheckedBlockNumber: blockNumber,
-    };
-  } else {
-    chainTransactions[hash] = {
-      ...transaction,
-      lastCheckedBlockNumber: Math.max(
-        transaction.lastCheckedBlockNumber,
-        blockNumber
-      ),
-    };
-  }
+  const updatedLastCheckedBlockNumber =
+    transaction.lastCheckedBlockNumber === undefined
+      ? blockNumber
+      : Math.max(transaction.lastCheckedBlockNumber, blockNumber);
+
+  return {
+    ...transactionsState,
+    [chainId]: {
+      ...chainTransactions,
+      [hash]: {
+        ...transaction,
+        lastCheckedBlockNumber: updatedLastCheckedBlockNumber,
+      },
+    },
+  };
 }

@@ -7,12 +7,15 @@ export interface ClearAllTransactionsPayload {
 export function clearAllTransactions(
   transactionsState: TransactionsState,
   payload: ClearAllTransactionsPayload
-): void {
+): TransactionsState {
   const { chainId } = payload;
 
   if (transactionsState[chainId] === undefined) {
-    return;
+    return transactionsState;
   }
 
-  transactionsState[chainId] = {};
+  return {
+    ...transactionsState,
+    [chainId]: {},
+  };
 }

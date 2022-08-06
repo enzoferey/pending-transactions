@@ -11,24 +11,30 @@ export interface FinalizeTransactionPayload {
 export function finalizeTransaction(
   transactionsState: TransactionsState,
   payload: FinalizeTransactionPayload
-): void {
+): TransactionsState {
   const { chainId, hash, receipt } = payload;
 
   const chainTransactions = transactionsState[chainId];
 
   if (chainTransactions === undefined) {
-    return;
+    return transactionsState;
   }
 
   const transaction = chainTransactions[hash];
 
   if (transaction === undefined) {
-    return;
+    return transactionsState;
   }
 
-  chainTransactions[hash] = {
-    ...transaction,
-    receipt,
-    confirmedTime: getNow(),
+  return {
+    ...transactionsState,
+    [chainId]: {
+      ...chainTransactions,
+      [hash]: {
+        ...transaction,
+        receipt,
+        confirmedTime: getNow(),
+      },
+    },
   };
 }

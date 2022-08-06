@@ -17,7 +17,7 @@ export interface AddTransactionPayload {
 export function addTransaction(
   transactionsState: TransactionsState,
   payload: AddTransactionPayload
-): void {
+): TransactionsState {
   const { chainId, from, hash, info } = payload;
 
   const chainTransactions = getValueOrDefault(transactionsState[chainId], {});
@@ -33,7 +33,11 @@ export function addTransaction(
     addedTime: getNow(),
   };
 
-  chainTransactions[hash] = transaction;
-
-  transactionsState[chainId] = chainTransactions;
+  return {
+    ...transactionsState,
+    [chainId]: {
+      ...chainTransactions,
+      [hash]: transaction,
+    },
+  };
 }
