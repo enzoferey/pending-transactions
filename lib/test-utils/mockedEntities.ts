@@ -18,6 +18,7 @@ export const MOCK_TRANSACTION_RECEIPT: TransactionReceipt = {
   transactionHash: "0x1000000000000000000000000000000000000010",
   blockHash: "0x2000000000000000000000000000000000000010",
   blockNumber: 1,
+  hadSuccess: false,
 };
 
 export const MOCK_TRANSACTION: Transaction = {
