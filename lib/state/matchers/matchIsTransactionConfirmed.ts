@@ -1,8 +1,10 @@
-import type { TransactionsState } from "../types";
+import type { TransactionsState } from "../../types";
 
 import { getChainTransaction } from "../selectors";
 
-export function matchIsTransactionPending(
+import { matchIsTransactionPending } from "./matchIsTransactionPending";
+
+export function matchIsTransactionConfirmed(
   transactionsState: TransactionsState,
   chainId: number,
   transactionHash: string
@@ -18,6 +20,7 @@ export function matchIsTransactionPending(
   }
 
   return (
-    transaction.receipt === undefined && transaction.confirmedTime === undefined
+    matchIsTransactionPending(transactionsState, chainId, transactionHash) ===
+    false
   );
 }

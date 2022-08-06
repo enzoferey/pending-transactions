@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { MOCK_CHAIN_ID_1, MOCK_TRANSACTION } from "../../test-utils";
+import { MOCK_CHAIN_ID_1, MOCK_TRANSACTION } from "../../../test-utils";
 
-import type { ChainTransactionsState, TransactionsState } from "../../types";
+import type { ChainTransactionsState, TransactionsState } from "../../../types";
 
 import { getAllChainTransactions } from "../getAllChainTransactions";
 

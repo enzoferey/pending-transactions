@@ -2,10 +2,10 @@ import type {
   BaseTransactionInfo,
   Transaction,
   TransactionsState,
-} from "../types";
+} from "../../types";
 
-import { getNow } from "../utils/getNow";
-import { getValueOrDefault } from "../utils/getValueOrDefault";
+import { getNow } from "../../utils/getNow";
+import { getValueOrDefault } from "../../utils/getValueOrDefault";
 
 export interface AddTransactionPayload {
   chainId: number;

@@ -1,18 +1,30 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
 import {
   MOCK_CHAIN_ID_1,
   MOCK_CHAIN_ID_2,
   MOCK_TRANSACTION,
   MOCK_TRANSACTION_HASH_1,
-} from "../../test-utils";
+  MOCK_TRANSACTION_RECEIPT,
+} from "../../../test-utils";
 
-import type { ChainTransactionsState, TransactionsState } from "../../types";
+import type { ChainTransactionsState, TransactionsState } from "../../../types";
 
-import { updateTransactionLastChecked } from "../updateTransactionLastChecked";
+import { finalizeTransaction } from "../finalizeTransaction";
 
-describe("updateTransactionLastChecked", () => {
+const MOCKED_NOW = 123456789;
+
+vi.mock("../../../utils/getNow", () => {
+  return {
+    getNow: () => {
+      return MOCKED_NOW;
+    },
+  };
+});
+
+describe("finalizeTransaction", () => {
   describe("logic", () => {
-    it("should set the last checked block number of the transaction", () => {
+    it("should set the receipt and confirmed time of the transaction", () => {
       const chainId = MOCK_CHAIN_ID_1;
 
       const transaction = MOCK_TRANSACTION;
@@ -23,50 +35,24 @@ describe("updateTransactionLastChecked", () => {
         },
       };
 
+      expect(transactionsState[chainId]?.[transaction.hash]?.receipt).toBe(
+        undefined
+      );
       expect(
-        transactionsState[chainId]?.[transaction.hash]?.lastCheckedBlockNumber
+        transactionsState[chainId]?.[transaction.hash]?.confirmedTime
       ).toBe(undefined);
 
-      const blockNumber = 123;
-
-      const result = updateTransactionLastChecked(transactionsState, {
+      const result = finalizeTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
-        blockNumber,
+        receipt: MOCK_TRANSACTION_RECEIPT,
       });
 
-      expect(
-        result[chainId]?.[transaction.hash]?.lastCheckedBlockNumber
-      ).toEqual(blockNumber);
-    });
-    it("should set the bigger last checked block number of the transaction", () => {
-      const chainId = MOCK_CHAIN_ID_1;
-
-      const lastCheckedBlockNumber = 123;
-
-      const transaction = {
-        ...MOCK_TRANSACTION,
-        lastCheckedBlockNumber: lastCheckedBlockNumber,
-      };
-
-      const transactionsState: TransactionsState = {
-        [chainId]: {
-          [transaction.hash]: transaction,
-        },
-      };
-
-      expect(
-        transactionsState[chainId]?.[transaction.hash]?.lastCheckedBlockNumber
-      ).toBe(lastCheckedBlockNumber);
-
-      const result = updateTransactionLastChecked(transactionsState, {
-        chainId,
-        hash: transaction.hash,
-        blockNumber: lastCheckedBlockNumber - 1,
-      });
-
-      expect(result[chainId]?.[transaction.hash]?.lastCheckedBlockNumber).toBe(
-        lastCheckedBlockNumber
+      expect(result[chainId]?.[transaction.hash]?.receipt).toEqual(
+        MOCK_TRANSACTION_RECEIPT
+      );
+      expect(result[chainId]?.[transaction.hash]?.confirmedTime).toBe(
+        MOCKED_NOW
       );
     });
     it("should do nothing if the transaction chain id state is empty", () => {
@@ -74,10 +60,10 @@ describe("updateTransactionLastChecked", () => {
 
       const transactionsState: TransactionsState = {};
 
-      const result = updateTransactionLastChecked(transactionsState, {
+      const result = finalizeTransaction(transactionsState, {
         chainId,
         hash: MOCK_TRANSACTION_HASH_1,
-        blockNumber: 0,
+        receipt: MOCK_TRANSACTION_RECEIPT,
       });
 
       expect(result).toBe(transactionsState);
@@ -90,14 +76,16 @@ describe("updateTransactionLastChecked", () => {
         [chainId]: {},
       };
 
-      const result = updateTransactionLastChecked(transactionsState, {
+      const result = finalizeTransaction(transactionsState, {
         chainId,
         hash: MOCK_TRANSACTION_HASH_1,
-        blockNumber: 0,
+        receipt: MOCK_TRANSACTION_RECEIPT,
       });
 
       expect(result).toBe(transactionsState);
-      expect(result).toEqual({ [chainId]: {} });
+      expect(result).toEqual({
+        [chainId]: {},
+      });
     });
   });
   describe("pureness", () => {
@@ -112,10 +100,10 @@ describe("updateTransactionLastChecked", () => {
         },
       };
 
-      const result = updateTransactionLastChecked(transactionsState, {
+      const result = finalizeTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
-        blockNumber: 0,
+        receipt: MOCK_TRANSACTION_RECEIPT,
       });
 
       expect(result).not.toBe(transactionsState);
@@ -133,10 +121,10 @@ describe("updateTransactionLastChecked", () => {
         [chainId]: chainTransactions,
       };
 
-      const result = updateTransactionLastChecked(transactionsState, {
+      const result = finalizeTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
-        blockNumber: 0,
+        receipt: MOCK_TRANSACTION_RECEIPT,
       });
 
       expect(result[chainId]).not.toBe(chainTransactions);
@@ -154,10 +142,10 @@ describe("updateTransactionLastChecked", () => {
         [chainId]: chainTransactions,
       };
 
-      const result = updateTransactionLastChecked(transactionsState, {
+      const result = finalizeTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
-        blockNumber: 0,
+        receipt: MOCK_TRANSACTION_RECEIPT,
       });
 
       expect(result[chainId]?.[transaction.hash]).not.toBe(transaction);
@@ -175,10 +163,10 @@ describe("updateTransactionLastChecked", () => {
         [chainId]: chainTransactions,
       };
 
-      const result = updateTransactionLastChecked(transactionsState, {
+      const result = finalizeTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
-        blockNumber: 0,
+        receipt: MOCK_TRANSACTION_RECEIPT,
       });
 
       expect(result).not.toBe(transactionsState);
@@ -208,10 +196,10 @@ describe("updateTransactionLastChecked", () => {
         [otherChainId]: otherChainTransactions,
       };
 
-      const result = updateTransactionLastChecked(transactionsState, {
+      const result = finalizeTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
-        blockNumber: 0,
+        receipt: MOCK_TRANSACTION_RECEIPT,
       });
 
       expect(result[otherChainId]).toBe(otherChainTransactions);
@@ -234,10 +222,10 @@ describe("updateTransactionLastChecked", () => {
         [chainId]: chainTransactions,
       };
 
-      const result = updateTransactionLastChecked(transactionsState, {
+      const result = finalizeTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
-        blockNumber: 0,
+        receipt: MOCK_TRANSACTION_RECEIPT,
       });
 
       expect(result[chainId]?.[otherTransaction.hash]).toBe(otherTransaction);

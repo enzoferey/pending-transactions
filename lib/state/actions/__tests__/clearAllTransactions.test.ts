@@ -4,9 +4,9 @@ import {
   MOCK_CHAIN_ID_1,
   MOCK_CHAIN_ID_2,
   MOCK_TRANSACTION,
-} from "../../test-utils";
+} from "../../../test-utils";
 
-import type { ChainTransactionsState, TransactionsState } from "../../types";
+import type { ChainTransactionsState, TransactionsState } from "../../../types";
 
 import { clearAllTransactions } from "../clearAllTransactions";
 

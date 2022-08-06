@@ -4,33 +4,14 @@ import {
   MOCK_CHAIN_ID_1,
   MOCK_CONFIRMED_TRANSACTION,
   MOCK_TRANSACTION,
-} from "../../test-utils";
+} from "../../../test-utils";
 
-import type { TransactionsState } from "../../types";
+import type { TransactionsState } from "../../../types";
 
-import { matchIsTransactionConfirmed } from "../matchIsTransactionConfirmed";
+import { matchIsTransactionPending } from "../matchIsTransactionPending";
 
-describe("matchIsTransactionConfirmed", () => {
-  it("should return true if the transaction has a receipt and a confirmed time", () => {
-    const chainId = MOCK_CHAIN_ID_1;
-
-    const transaction = MOCK_CONFIRMED_TRANSACTION;
-
-    const transactionsState: TransactionsState = {
-      [chainId]: {
-        [transaction.hash]: transaction,
-      },
-    };
-
-    const result = matchIsTransactionConfirmed(
-      transactionsState,
-      chainId,
-      transaction.hash
-    );
-
-    expect(result).toBe(true);
-  });
-  it("should return false if the transaction does not have a receipt or a confirmed time", () => {
+describe("matchIsTransactionPending", () => {
+  it("should return true if the transaction does not have a receipt or a confirmed time", () => {
     const chainId = MOCK_CHAIN_ID_1;
 
     const transaction = MOCK_TRANSACTION;
@@ -41,7 +22,26 @@ describe("matchIsTransactionConfirmed", () => {
       },
     };
 
-    const result = matchIsTransactionConfirmed(
+    const result = matchIsTransactionPending(
+      transactionsState,
+      chainId,
+      transaction.hash
+    );
+
+    expect(result).toBe(true);
+  });
+  it("should return false if the transaction has a receipt and a confirmed time", () => {
+    const chainId = MOCK_CHAIN_ID_1;
+
+    const transaction = MOCK_CONFIRMED_TRANSACTION;
+
+    const transactionsState: TransactionsState = {
+      [chainId]: {
+        [transaction.hash]: transaction,
+      },
+    };
+
+    const result = matchIsTransactionPending(
       transactionsState,
       chainId,
       transaction.hash
@@ -56,7 +56,7 @@ describe("matchIsTransactionConfirmed", () => {
 
     const transactionsState: TransactionsState = {};
 
-    const result = matchIsTransactionConfirmed(
+    const result = matchIsTransactionPending(
       transactionsState,
       chainId,
       transaction.hash

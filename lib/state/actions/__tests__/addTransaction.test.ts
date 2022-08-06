@@ -7,13 +7,13 @@ import {
   MOCK_TRANSACTION_HASH_1,
   MOCK_TRANSACTION_TYPE,
   MOCK_TRANSACTION,
-} from "../../test-utils";
+} from "../../../test-utils";
 
-import type { ChainTransactionsState, TransactionsState } from "../../types";
+import type { ChainTransactionsState, TransactionsState } from "../../../types";
 
 import { addTransaction, AddTransactionPayload } from "../addTransaction";
 
-vi.mock("../../utils/getNow", () => {
+vi.mock("../../../utils/getNow", () => {
   return {
     getNow: () => {
       return 1662458754000;

@@ -1,4 +1,4 @@
-import { Transaction, TransactionReceipt } from "../types";
+import type { Transaction, TransactionReceipt } from "../types";
 
 export const MOCK_CHAIN_ID_1 = 1;
 export const MOCK_CHAIN_ID_2 = 2;

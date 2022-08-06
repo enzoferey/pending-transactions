@@ -1,6 +1,6 @@
-import type { TransactionReceipt, TransactionsState } from "../types";
+import type { TransactionReceipt, TransactionsState } from "../../types";
 
-import { getNow } from "../utils/getNow";
+import { getNow } from "../../utils/getNow";
 
 export interface FinalizeTransactionPayload {
   chainId: number;

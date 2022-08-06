@@ -1,4 +1,4 @@
-import type { Transaction, TransactionsState } from "../types";
+import type { Transaction, TransactionsState } from "../../types";
 
 import { getAllChainTransactions } from "./getAllChainTransactions";
 

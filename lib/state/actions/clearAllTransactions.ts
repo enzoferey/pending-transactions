@@ -1,4 +1,4 @@
-import type { TransactionsState } from "../types";
+import type { TransactionsState } from "../../types";
 
 export interface ClearAllTransactionsPayload {
   chainId: number;
