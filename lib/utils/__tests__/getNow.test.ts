@@ -12,13 +12,13 @@ describe("getNow", () => {
   });
 
   it("should return the UNIX timestamp of the current time", () => {
-    const date1 = new Date(1970, 0, 1, 1, 0, 0, 0).toISOString();
+    const date1 = new Date("1970-01-01T00:00:00.000Z");
     vi.setSystemTime(date1);
 
     const result1 = getNow();
     expect(result1).toBe(0);
 
-    const date2 = new Date(2022, 8, 6, 12, 5, 54, 0).toISOString();
+    const date2 = new Date("2022-09-06T10:05:54.000Z");
     vi.setSystemTime(date2);
 
     const result2 = getNow();
