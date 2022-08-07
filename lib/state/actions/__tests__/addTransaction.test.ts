@@ -42,15 +42,15 @@ describe("addTransaction", () => {
       const result = addTransaction(transactionsState, transactionPayload);
 
       expect(result[chainId]?.[transactionPayload.hash]).toMatchInlineSnapshot(`
-          {
-            "addedTime": 1662458754000,
-            "from": "0x0000000000000000000000000000000000000001",
-            "hash": "0x1000000000000000000000000000000000000001",
-            "info": {
-              "type": "test-type",
-            },
-          }
-        `);
+        {
+          "addedTime": 1662458754000,
+          "from": "0x0000000000000000000000000000000000000001",
+          "hash": "0x1000000000000000000000000000000000000001",
+          "info": {
+            "type": "test-type",
+          },
+        }
+      `);
     });
     it("should add a transaction to the state when no transactions exist for that chain id yet", () => {
       const chainId = MOCK_CHAIN_ID_1;

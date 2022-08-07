@@ -3,6 +3,7 @@ import React from "react";
 import type {
   BaseTransactionInfo,
   ChainTransactionsState,
+  OracleTransaction,
   Transaction,
   TransactionReceipt,
   TransactionsState,
@@ -12,6 +13,7 @@ import { useIsOnline } from "../../hooks/useIsOnline";
 import { useIsWindowActive } from "../../hooks/useIsWindowActive";
 
 import * as actions from "../../state/actions";
+import * as utils from "../../state/utils";
 
 import type { StorageService } from "../types";
 
@@ -26,6 +28,9 @@ interface Options<TransactionInfo extends BaseTransactionInfo> {
   getAllChainTransactions: () => ChainTransactionsState<TransactionInfo>;
   getTransactionReceipt: (
     transaction: Transaction<TransactionInfo>
+  ) => Promise<TransactionReceipt | undefined>;
+  getOracleTransactionReceipt: (
+    transaction: OracleTransaction<TransactionInfo>
   ) => Promise<TransactionReceipt | undefined>;
   onSuccess: (transaction: Transaction<TransactionInfo>) => void;
   onFailure: (transaction: Transaction<TransactionInfo>) => void;
@@ -42,6 +47,7 @@ export function useCheckTransactions<
     setState,
     getAllChainTransactions,
     getTransactionReceipt,
+    getOracleTransactionReceipt,
     onSuccess,
     onFailure,
   } = options;
@@ -77,7 +83,51 @@ export function useCheckTransactions<
         });
       } else {
         setState((currentState) => {
-          const updatedState = actions.finalizeTransaction(currentState, {
+          const updatedState = actions.confirmTransaction(currentState, {
+            chainId,
+            hash: transaction.hash,
+            receipt,
+          });
+
+          if (storageKey !== undefined && storageService !== undefined) {
+            storageService.setItem(storageKey, JSON.stringify(updatedState));
+          }
+
+          return updatedState;
+        });
+
+        if (receipt.hadSuccess) {
+          onSuccess(transaction);
+        } else {
+          onFailure(transaction);
+        }
+      }
+    };
+
+    const handleOracleReceipt = (
+      transaction: OracleTransaction<TransactionInfo>,
+      receipt: TransactionReceipt | undefined
+    ) => {
+      if (receipt === undefined) {
+        setState((currentState) => {
+          const updatedState = actions.updateTransactionLastChecked(
+            currentState,
+            {
+              chainId,
+              hash: transaction.hash,
+              blockNumber: lastBlockNumber,
+            }
+          );
+
+          if (storageKey !== undefined && storageService !== undefined) {
+            storageService.setItem(storageKey, JSON.stringify(updatedState));
+          }
+
+          return updatedState;
+        });
+      } else {
+        setState((currentState) => {
+          const updatedState = actions.confirmTransaction(currentState, {
             chainId,
             hash: transaction.hash,
             receipt,
@@ -112,6 +162,11 @@ export function useCheckTransactions<
 
       await Promise.all(
         transactionsToCheck.map((transaction) => {
+          if (utils.matchIsOracleTransaction(transaction)) {
+            return getOracleTransactionReceipt(transaction).then((receipt) => {
+              handleOracleReceipt(transaction, receipt);
+            });
+          }
           return getTransactionReceipt(transaction).then((receipt) => {
             handleReceipt(transaction, receipt);
           });
@@ -130,6 +185,7 @@ export function useCheckTransactions<
     setState,
     getAllChainTransactions,
     getTransactionReceipt,
+    getOracleTransactionReceipt,
     onSuccess,
     onFailure,
   ]);

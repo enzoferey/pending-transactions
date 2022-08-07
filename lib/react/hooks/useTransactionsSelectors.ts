@@ -3,6 +3,7 @@ import React from "react";
 import type {
   BaseTransactionInfo,
   ChainTransactionsState,
+  OracleTransaction,
   Transaction,
   TransactionsState,
 } from "../../types";
@@ -20,7 +21,10 @@ export type GetAllChainTransactions<
 
 export type GetChainTransaction<TransactionInfo extends BaseTransactionInfo> = (
   transactionHash: string
-) => Transaction<TransactionInfo> | undefined;
+) =>
+  | Transaction<TransactionInfo>
+  | OracleTransaction<TransactionInfo>
+  | undefined;
 
 interface ReturnValue<TransactionInfo extends BaseTransactionInfo> {
   getAllChainTransactions: GetAllChainTransactions<TransactionInfo>;

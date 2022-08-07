@@ -25,10 +25,20 @@ export interface Transaction<
   receipt?: TransactionReceipt;
 }
 
+export interface OracleTransaction<
+  TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
+> extends Transaction<TransactionInfo> {
+  oracleConfirmedTime?: number;
+  oracleRecept?: TransactionReceipt;
+  isOracleTransaction: true;
+}
+
 export interface ChainTransactionsState<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
 > {
-  [transactionHash: string]: Transaction<TransactionInfo>;
+  [transactionHash: string]:
+    | Transaction<TransactionInfo>
+    | OracleTransaction<TransactionInfo>;
 }
 
 export interface TransactionsState<

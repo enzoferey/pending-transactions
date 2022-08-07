@@ -1,5 +1,6 @@
 import type {
   BaseTransactionInfo,
+  OracleTransaction,
   Transaction,
   TransactionsState,
 } from "../../types";
@@ -12,7 +13,10 @@ export function getChainTransaction<
   transactionsState: TransactionsState<TransactionInfo>,
   chainId: number,
   transactionHash: string
-): Transaction<TransactionInfo> | undefined {
+):
+  | Transaction<TransactionInfo>
+  | OracleTransaction<TransactionInfo>
+  | undefined {
   const chainTransactions = getAllChainTransactions(transactionsState, chainId);
   const transaction = chainTransactions[transactionHash];
   return transaction;

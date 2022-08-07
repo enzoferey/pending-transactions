@@ -5,6 +5,7 @@ import type {
   Transaction,
   BaseTransactionInfo,
   TransactionReceipt,
+  OracleTransaction,
 } from "../types";
 
 import type { StorageService } from "./types";
@@ -37,6 +38,9 @@ interface Options<TransactionInfo extends BaseTransactionInfo> {
   getTransactionReceipt: (
     transaction: Transaction<TransactionInfo>
   ) => Promise<TransactionReceipt | undefined>;
+  getOracleTransactionReceipt: (
+    transaction: OracleTransaction<TransactionInfo>
+  ) => Promise<TransactionReceipt | undefined>;
   onSuccess: (transaction: Transaction<TransactionInfo>) => void;
   onFailure: (transaction: Transaction<TransactionInfo>) => void;
 }
@@ -49,7 +53,7 @@ interface ReturnValue<TransactionInfo extends BaseTransactionInfo> {
   matchIsTransactionConfirmed: MatchIsTransactionConfirmed;
   addTransaction: AddTransaction<TransactionInfo>;
   updateTransactionLastChecked: UpdateTransactionLastChecked;
-  finalizeTransaction: FinalizeTransaction;
+  confirmTransaction: FinalizeTransaction;
   clearAllChainTransactions: ClearAllChainTransactions;
 }
 
@@ -62,6 +66,7 @@ export function usePendingTransactions<
     storageKey,
     storageService,
     getTransactionReceipt,
+    getOracleTransactionReceipt,
     onSuccess,
     onFailure,
   } = options;
@@ -83,7 +88,7 @@ export function usePendingTransactions<
   const {
     addTransaction,
     updateTransactionLastChecked,
-    finalizeTransaction,
+    confirmTransaction,
     clearAllChainTransactions,
   } = useTransactionsActions<TransactionInfo>({
     storageKey,
@@ -99,6 +104,7 @@ export function usePendingTransactions<
     setState,
     getAllChainTransactions,
     getTransactionReceipt,
+    getOracleTransactionReceipt,
     onSuccess,
     onFailure,
   });
@@ -112,7 +118,7 @@ export function usePendingTransactions<
       matchIsTransactionConfirmed,
       addTransaction,
       updateTransactionLastChecked,
-      finalizeTransaction,
+      confirmTransaction,
       clearAllChainTransactions,
     };
   }, [
@@ -123,7 +129,7 @@ export function usePendingTransactions<
     matchIsTransactionConfirmed,
     addTransaction,
     updateTransactionLastChecked,
-    finalizeTransaction,
+    confirmTransaction,
     clearAllChainTransactions,
   ]);
 
