@@ -33,7 +33,7 @@ export type ClearAllChainTransactions = (
 interface ReturnValue<TransactionInfo extends BaseTransactionInfo> {
   addTransaction: AddTransaction<TransactionInfo>;
   updateTransactionLastChecked: UpdateTransactionLastChecked;
-  finalizeTransaction: FinalizeTransaction;
+  confirmTransaction: FinalizeTransaction;
   clearAllChainTransactions: ClearAllChainTransactions;
 }
 
@@ -76,10 +76,10 @@ export function useTransactionsActions<
       [storageKey, storageService, setState]
     );
 
-  const finalizeTransaction = React.useCallback<FinalizeTransaction>(
+  const confirmTransaction = React.useCallback<FinalizeTransaction>(
     (payload) => {
       setState((currentState) => {
-        const updatedState = actions.finalizeTransaction(currentState, payload);
+        const updatedState = actions.confirmTransaction(currentState, payload);
 
         if (storageKey !== undefined && storageService !== undefined) {
           storageService.setItem(storageKey, JSON.stringify(updatedState));
@@ -114,13 +114,13 @@ export function useTransactionsActions<
     return {
       addTransaction,
       updateTransactionLastChecked,
-      finalizeTransaction,
+      confirmTransaction,
       clearAllChainTransactions,
     };
   }, [
     addTransaction,
     updateTransactionLastChecked,
-    finalizeTransaction,
+    confirmTransaction,
     clearAllChainTransactions,
   ]);
 

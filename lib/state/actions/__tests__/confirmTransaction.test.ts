@@ -10,7 +10,7 @@ import {
 
 import type { ChainTransactionsState, TransactionsState } from "../../../types";
 
-import { finalizeTransaction } from "../finalizeTransaction";
+import { confirmTransaction } from "../confirmTransaction";
 
 const MOCKED_NOW = 123456789;
 
@@ -22,7 +22,7 @@ vi.mock("../../../utils/getNow", () => {
   };
 });
 
-describe("finalizeTransaction", () => {
+describe("confirmTransaction", () => {
   describe("logic", () => {
     it("should set the receipt and confirmed time of the transaction", () => {
       const chainId = MOCK_CHAIN_ID_1;
@@ -42,7 +42,7 @@ describe("finalizeTransaction", () => {
         transactionsState[chainId]?.[transaction.hash]?.confirmedTime
       ).toBe(undefined);
 
-      const result = finalizeTransaction(transactionsState, {
+      const result = confirmTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
         receipt: MOCK_TRANSACTION_RECEIPT,
@@ -60,7 +60,7 @@ describe("finalizeTransaction", () => {
 
       const transactionsState: TransactionsState = {};
 
-      const result = finalizeTransaction(transactionsState, {
+      const result = confirmTransaction(transactionsState, {
         chainId,
         hash: MOCK_TRANSACTION_HASH_1,
         receipt: MOCK_TRANSACTION_RECEIPT,
@@ -76,7 +76,7 @@ describe("finalizeTransaction", () => {
         [chainId]: {},
       };
 
-      const result = finalizeTransaction(transactionsState, {
+      const result = confirmTransaction(transactionsState, {
         chainId,
         hash: MOCK_TRANSACTION_HASH_1,
         receipt: MOCK_TRANSACTION_RECEIPT,
@@ -100,7 +100,7 @@ describe("finalizeTransaction", () => {
         },
       };
 
-      const result = finalizeTransaction(transactionsState, {
+      const result = confirmTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
         receipt: MOCK_TRANSACTION_RECEIPT,
@@ -121,7 +121,7 @@ describe("finalizeTransaction", () => {
         [chainId]: chainTransactions,
       };
 
-      const result = finalizeTransaction(transactionsState, {
+      const result = confirmTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
         receipt: MOCK_TRANSACTION_RECEIPT,
@@ -142,7 +142,7 @@ describe("finalizeTransaction", () => {
         [chainId]: chainTransactions,
       };
 
-      const result = finalizeTransaction(transactionsState, {
+      const result = confirmTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
         receipt: MOCK_TRANSACTION_RECEIPT,
@@ -163,7 +163,7 @@ describe("finalizeTransaction", () => {
         [chainId]: chainTransactions,
       };
 
-      const result = finalizeTransaction(transactionsState, {
+      const result = confirmTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
         receipt: MOCK_TRANSACTION_RECEIPT,
@@ -196,7 +196,7 @@ describe("finalizeTransaction", () => {
         [otherChainId]: otherChainTransactions,
       };
 
-      const result = finalizeTransaction(transactionsState, {
+      const result = confirmTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
         receipt: MOCK_TRANSACTION_RECEIPT,
@@ -222,7 +222,7 @@ describe("finalizeTransaction", () => {
         [chainId]: chainTransactions,
       };
 
-      const result = finalizeTransaction(transactionsState, {
+      const result = confirmTransaction(transactionsState, {
         chainId,
         hash: transaction.hash,
         receipt: MOCK_TRANSACTION_RECEIPT,

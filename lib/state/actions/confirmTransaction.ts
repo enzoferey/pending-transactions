@@ -12,7 +12,7 @@ export interface FinalizeTransactionPayload {
   receipt: TransactionReceipt;
 }
 
-export function finalizeTransaction<
+export function confirmTransaction<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
 >(
   transactionsState: TransactionsState<TransactionInfo>,
