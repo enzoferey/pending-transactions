@@ -6,19 +6,21 @@ import type {
 
 import { getNow } from "../../utils/getNow";
 
-export interface ConfirmTransactionPayload {
+import * as utils from "../utils";
+
+export interface ConfirmOracleTransactionPayload {
   chainId: number;
   hash: string;
-  receipt: TransactionReceipt;
+  oracleReceipt: TransactionReceipt;
 }
 
-export function confirmTransaction<
+export function confirmOracleTransaction<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
 >(
   transactionsState: TransactionsState<TransactionInfo>,
-  payload: ConfirmTransactionPayload
+  payload: ConfirmOracleTransactionPayload
 ): TransactionsState<TransactionInfo> {
-  const { chainId, hash, receipt } = payload;
+  const { chainId, hash, oracleReceipt } = payload;
 
   const chainTransactions = transactionsState[chainId];
 
@@ -32,14 +34,18 @@ export function confirmTransaction<
     return transactionsState;
   }
 
+  if (utils.matchIsOracleTransaction(transaction) === false) {
+    return transactionsState;
+  }
+
   return {
     ...transactionsState,
     [chainId]: {
       ...chainTransactions,
       [hash]: {
         ...transaction,
-        receipt,
-        confirmedTime: getNow(),
+        oracleReceipt,
+        oracleConfirmedTime: getNow(),
       },
     },
   };

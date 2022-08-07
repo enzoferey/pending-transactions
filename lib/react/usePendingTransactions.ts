@@ -23,8 +23,10 @@ import {
 } from "./hooks/useTransactionsMatchers";
 import {
   AddTransaction,
+  AddOracleTransaction,
   UpdateTransactionLastChecked,
-  FinalizeTransaction,
+  ConfirmTransaction,
+  ConfirmOracleTransaction,
   ClearAllChainTransactions,
   useTransactionsActions,
 } from "./hooks/useTransactionsActions";
@@ -52,8 +54,10 @@ interface ReturnValue<TransactionInfo extends BaseTransactionInfo> {
   matchIsTransactionPending: MatchIsTransactionPending;
   matchIsTransactionConfirmed: MatchIsTransactionConfirmed;
   addTransaction: AddTransaction<TransactionInfo>;
+  addOracleTransaction: AddOracleTransaction<TransactionInfo>;
   updateTransactionLastChecked: UpdateTransactionLastChecked;
-  confirmTransaction: FinalizeTransaction;
+  confirmTransaction: ConfirmTransaction;
+  confirmOracleTransaction: ConfirmOracleTransaction;
   clearAllChainTransactions: ClearAllChainTransactions;
 }
 
@@ -87,8 +91,10 @@ export function usePendingTransactions<
 
   const {
     addTransaction,
+    addOracleTransaction,
     updateTransactionLastChecked,
     confirmTransaction,
+    confirmOracleTransaction,
     clearAllChainTransactions,
   } = useTransactionsActions<TransactionInfo>({
     storageKey,
@@ -117,8 +123,10 @@ export function usePendingTransactions<
       matchIsTransactionPending,
       matchIsTransactionConfirmed,
       addTransaction,
+      addOracleTransaction,
       updateTransactionLastChecked,
       confirmTransaction,
+      confirmOracleTransaction,
       clearAllChainTransactions,
     };
   }, [
@@ -128,8 +136,10 @@ export function usePendingTransactions<
     matchIsTransactionPending,
     matchIsTransactionConfirmed,
     addTransaction,
+    addOracleTransaction,
     updateTransactionLastChecked,
     confirmTransaction,
+    confirmOracleTransaction,
     clearAllChainTransactions,
   ]);
 

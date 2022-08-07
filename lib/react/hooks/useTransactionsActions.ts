@@ -18,12 +18,19 @@ export type AddTransaction<TransactionInfo extends BaseTransactionInfo> = (
   payloads: actions.AddTransactionPayload<TransactionInfo>
 ) => void;
 
+export type AddOracleTransaction<TransactionInfo extends BaseTransactionInfo> =
+  (payloads: actions.AddOracleTransactionPayload<TransactionInfo>) => void;
+
 export type UpdateTransactionLastChecked = (
   payloads: actions.UpdateTransactionLastCheckedPayload
 ) => void;
 
-export type FinalizeTransaction = (
-  payloads: actions.FinalizeTransactionPayload
+export type ConfirmTransaction = (
+  payloads: actions.ConfirmTransactionPayload
+) => void;
+
+export type ConfirmOracleTransaction = (
+  payloads: actions.ConfirmOracleTransactionPayload
 ) => void;
 
 export type ClearAllChainTransactions = (
@@ -32,8 +39,10 @@ export type ClearAllChainTransactions = (
 
 interface ReturnValue<TransactionInfo extends BaseTransactionInfo> {
   addTransaction: AddTransaction<TransactionInfo>;
+  addOracleTransaction: AddOracleTransaction<TransactionInfo>;
   updateTransactionLastChecked: UpdateTransactionLastChecked;
-  confirmTransaction: FinalizeTransaction;
+  confirmTransaction: ConfirmTransaction;
+  confirmOracleTransaction: ConfirmOracleTransaction;
   clearAllChainTransactions: ClearAllChainTransactions;
 }
 
@@ -46,6 +55,26 @@ export function useTransactionsActions<
     (payload) => {
       setState((currentState) => {
         const updatedState = actions.addTransaction(currentState, payload);
+
+        if (storageKey !== undefined && storageService !== undefined) {
+          storageService.setItem(storageKey, JSON.stringify(updatedState));
+        }
+
+        return updatedState;
+      });
+    },
+    [storageKey, storageService, setState]
+  );
+
+  const addOracleTransaction = React.useCallback<
+    AddOracleTransaction<TransactionInfo>
+  >(
+    (payload) => {
+      setState((currentState) => {
+        const updatedState = actions.addOracleTransaction(
+          currentState,
+          payload
+        );
 
         if (storageKey !== undefined && storageService !== undefined) {
           storageService.setItem(storageKey, JSON.stringify(updatedState));
@@ -76,10 +105,28 @@ export function useTransactionsActions<
       [storageKey, storageService, setState]
     );
 
-  const confirmTransaction = React.useCallback<FinalizeTransaction>(
+  const confirmTransaction = React.useCallback<ConfirmTransaction>(
     (payload) => {
       setState((currentState) => {
         const updatedState = actions.confirmTransaction(currentState, payload);
+
+        if (storageKey !== undefined && storageService !== undefined) {
+          storageService.setItem(storageKey, JSON.stringify(updatedState));
+        }
+
+        return updatedState;
+      });
+    },
+    [storageKey, storageService, setState]
+  );
+
+  const confirmOracleTransaction = React.useCallback<ConfirmOracleTransaction>(
+    (payload) => {
+      setState((currentState) => {
+        const updatedState = actions.confirmOracleTransaction(
+          currentState,
+          payload
+        );
 
         if (storageKey !== undefined && storageService !== undefined) {
           storageService.setItem(storageKey, JSON.stringify(updatedState));
@@ -113,14 +160,18 @@ export function useTransactionsActions<
   const value = React.useMemo<ReturnValue<TransactionInfo>>(() => {
     return {
       addTransaction,
+      addOracleTransaction,
       updateTransactionLastChecked,
       confirmTransaction,
+      confirmOracleTransaction,
       clearAllChainTransactions,
     };
   }, [
     addTransaction,
+    addOracleTransaction,
     updateTransactionLastChecked,
     confirmTransaction,
+    confirmOracleTransaction,
     clearAllChainTransactions,
   ]);
 

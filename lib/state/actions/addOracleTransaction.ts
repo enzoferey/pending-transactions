@@ -7,7 +7,7 @@ import type {
 import { getNow } from "../../utils/getNow";
 import { getValueOrDefault } from "../../utils/getValueOrDefault";
 
-export interface AddTransactionPayload<
+export interface AddOracleTransactionPayload<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
 > {
   chainId: number;
@@ -20,7 +20,7 @@ export function addOracleTransaction<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
 >(
   transactionsState: TransactionsState<TransactionInfo>,
-  payload: AddTransactionPayload<TransactionInfo>
+  payload: AddOracleTransactionPayload<TransactionInfo>
 ): TransactionsState<TransactionInfo> {
   const { chainId, from, hash, info } = payload;
 
