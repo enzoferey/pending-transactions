@@ -29,7 +29,7 @@ export interface OracleTransaction<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
 > extends Transaction<TransactionInfo> {
   oracleConfirmedTime?: number;
-  oracleRecept?: TransactionReceipt;
+  oracleReceipt?: TransactionReceipt;
   isOracleTransaction: true;
 }
 
