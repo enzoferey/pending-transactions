@@ -1,15 +1,14 @@
 import type { TransactionsState } from "../../types";
 
-import { getChainTransaction } from "../selectors";
-
-import { matchIsTransactionPending } from "./matchIsTransactionPending";
+import * as selectors from "../selectors";
+import * as utils from "../utils";
 
 export function matchIsTransactionConfirmed(
   transactionsState: TransactionsState,
   chainId: number,
   transactionHash: string
 ): boolean {
-  const transaction = getChainTransaction(
+  const transaction = selectors.getChainTransaction(
     transactionsState,
     chainId,
     transactionHash
@@ -19,8 +18,5 @@ export function matchIsTransactionConfirmed(
     return false;
   }
 
-  return (
-    matchIsTransactionPending(transactionsState, chainId, transactionHash) ===
-    false
-  );
+  return utils.matchIsTransactionConfirmed(transaction);
 }
