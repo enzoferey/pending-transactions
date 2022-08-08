@@ -151,27 +151,39 @@ export function useCheckTransactions<
     const checkAllChainTransactions = async () => {
       const allChainTransactions = getAllChainTransactions();
 
-      const transactionsToCheck = Object.values(allChainTransactions).filter(
-        (transaction) => {
-          return (
-            transaction.lastCheckedBlockNumber === undefined ||
-            transaction.lastCheckedBlockNumber < lastBlockNumber
+      const transactionsToCheckPromises = Object.values(allChainTransactions)
+        .filter((transaction) => {
+          return utils.matchHasTransactionToBeChecked(
+            transaction,
+            lastBlockNumber
           );
-        }
-      );
-
-      await Promise.all(
-        transactionsToCheck.map((transaction) => {
-          if (utils.matchIsOracleTransaction(transaction)) {
-            return getOracleTransactionReceipt(transaction).then((receipt) => {
-              handleOracleReceipt(transaction, receipt);
-            });
-          }
+        })
+        .map((transaction) => {
           return getTransactionReceipt(transaction).then((receipt) => {
             handleReceipt(transaction, receipt);
           });
+        });
+
+      const oracletransactionsToCheckPromises = Object.values(
+        allChainTransactions
+      )
+        .filter(utils.matchIsOracleTransaction)
+        .filter((transaction) => {
+          return utils.matchHasOracleTransactionToBeChecked(
+            transaction,
+            lastBlockNumber
+          );
         })
-      );
+        .map((transaction) => {
+          return getOracleTransactionReceipt(transaction).then((receipt) => {
+            handleOracleReceipt(transaction, receipt);
+          });
+        });
+
+      await Promise.all([
+        ...transactionsToCheckPromises,
+        ...oracletransactionsToCheckPromises,
+      ]);
     };
 
     checkAllChainTransactions();
