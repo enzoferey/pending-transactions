@@ -3,7 +3,7 @@ import React from "react";
 import { matchIsDocumentVisible } from "../utils/matchIsDocumentVisible";
 
 export function useIsWindowActive(): boolean {
-  const [isWindowActive, setIsWindowActive] = React.useState<boolean>(false);
+  const [isWindowActive, setIsWindowActive] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     const updateIsWindowActive = () => {
