@@ -20,6 +20,8 @@ import {
   MatchIsTransactionPending,
   MatchIsTransactionConfirmed,
   useTransactionsMatchers,
+  MatchIsOracleTransactionConfirmed,
+  MatchIsOracleTransactionPending,
 } from "./hooks/useTransactionsMatchers";
 import {
   AddTransaction,
@@ -53,6 +55,8 @@ interface ReturnValue<TransactionInfo extends BaseTransactionInfo> {
   getChainTransaction: GetChainTransaction<TransactionInfo>;
   matchIsTransactionPending: MatchIsTransactionPending;
   matchIsTransactionConfirmed: MatchIsTransactionConfirmed;
+  matchIsOracleTransactionPending: MatchIsOracleTransactionPending;
+  matchIsOracleTransactionConfirmed: MatchIsOracleTransactionConfirmed;
   addTransaction: AddTransaction<TransactionInfo>;
   addOracleTransaction: AddOracleTransaction<TransactionInfo>;
   updateTransactionLastChecked: UpdateTransactionLastChecked;
@@ -86,8 +90,12 @@ export function usePendingTransactions<
       chainId,
     });
 
-  const { matchIsTransactionPending, matchIsTransactionConfirmed } =
-    useTransactionsMatchers({ state, chainId });
+  const {
+    matchIsTransactionPending,
+    matchIsTransactionConfirmed,
+    matchIsOracleTransactionPending,
+    matchIsOracleTransactionConfirmed,
+  } = useTransactionsMatchers({ state, chainId });
 
   const {
     addTransaction,
@@ -122,6 +130,8 @@ export function usePendingTransactions<
       getChainTransaction,
       matchIsTransactionPending,
       matchIsTransactionConfirmed,
+      matchIsOracleTransactionPending,
+      matchIsOracleTransactionConfirmed,
       addTransaction,
       addOracleTransaction,
       updateTransactionLastChecked,
@@ -135,6 +145,8 @@ export function usePendingTransactions<
     getChainTransaction,
     matchIsTransactionPending,
     matchIsTransactionConfirmed,
+    matchIsOracleTransactionPending,
+    matchIsOracleTransactionConfirmed,
     addTransaction,
     addOracleTransaction,
     updateTransactionLastChecked,

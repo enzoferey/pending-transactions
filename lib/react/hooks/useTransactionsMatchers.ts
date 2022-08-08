@@ -13,9 +13,19 @@ export type MatchIsTransactionPending = (transactionHash: string) => boolean;
 
 export type MatchIsTransactionConfirmed = (transactionHash: string) => boolean;
 
+export type MatchIsOracleTransactionPending = (
+  transactionHash: string
+) => boolean;
+
+export type MatchIsOracleTransactionConfirmed = (
+  transactionHash: string
+) => boolean;
+
 interface ReturnValue {
   matchIsTransactionPending: MatchIsTransactionPending;
   matchIsTransactionConfirmed: MatchIsTransactionConfirmed;
+  matchIsOracleTransactionPending: MatchIsOracleTransactionPending;
+  matchIsOracleTransactionConfirmed: MatchIsOracleTransactionConfirmed;
 }
 
 export function useTransactionsMatchers(options: Options): ReturnValue {
@@ -45,12 +55,43 @@ export function useTransactionsMatchers(options: Options): ReturnValue {
       [state, chainId]
     );
 
+  const matchIsOracleTransactionPending =
+    React.useCallback<MatchIsOracleTransactionConfirmed>(
+      (transactionHash) => {
+        return matchers.matchIsOracleTransactionConfirmed(
+          state,
+          chainId,
+          transactionHash
+        );
+      },
+      [state, chainId]
+    );
+
+  const matchIsOracleTransactionConfirmed =
+    React.useCallback<MatchIsOracleTransactionConfirmed>(
+      (transactionHash) => {
+        return matchers.matchIsOracleTransactionConfirmed(
+          state,
+          chainId,
+          transactionHash
+        );
+      },
+      [state, chainId]
+    );
+
   const value = React.useMemo<ReturnValue>(() => {
     return {
       matchIsTransactionPending,
       matchIsTransactionConfirmed,
+      matchIsOracleTransactionPending,
+      matchIsOracleTransactionConfirmed,
     };
-  }, [matchIsTransactionPending, matchIsTransactionConfirmed]);
+  }, [
+    matchIsTransactionPending,
+    matchIsTransactionConfirmed,
+    matchIsOracleTransactionPending,
+    matchIsOracleTransactionConfirmed,
+  ]);
 
   return value;
 }
