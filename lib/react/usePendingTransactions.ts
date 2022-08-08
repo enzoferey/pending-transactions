@@ -40,10 +40,12 @@ interface Options<TransactionInfo extends BaseTransactionInfo> {
   storageKey?: string;
   storageService?: StorageService;
   getTransactionReceipt: (
-    transaction: Transaction<TransactionInfo>
+    transaction: Transaction<TransactionInfo>,
+    blockNumber: number
   ) => Promise<TransactionReceipt | undefined>;
   getOracleTransactionReceipt: (
-    transaction: OracleTransaction<TransactionInfo>
+    transaction: OracleTransaction<TransactionInfo>,
+    blockNumber: number
   ) => Promise<TransactionReceipt | undefined>;
   onSuccess: (transaction: Transaction<TransactionInfo>) => void;
   onFailure: (transaction: Transaction<TransactionInfo>) => void;

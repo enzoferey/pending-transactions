@@ -27,10 +27,12 @@ interface Options<TransactionInfo extends BaseTransactionInfo> {
   >;
   getAllChainTransactions: () => ChainTransactionsState<TransactionInfo>;
   getTransactionReceipt: (
-    transaction: Transaction<TransactionInfo>
+    transaction: Transaction<TransactionInfo>,
+    blockNumber: number
   ) => Promise<TransactionReceipt | undefined>;
   getOracleTransactionReceipt: (
-    transaction: OracleTransaction<TransactionInfo>
+    transaction: OracleTransaction<TransactionInfo>,
+    blockNumber: number
   ) => Promise<TransactionReceipt | undefined>;
   onSuccess: (transaction: Transaction<TransactionInfo>) => void;
   onFailure: (transaction: Transaction<TransactionInfo>) => void;
@@ -159,9 +161,11 @@ export function useCheckTransactions<
           );
         })
         .map((transaction) => {
-          return getTransactionReceipt(transaction).then((receipt) => {
-            handleReceipt(transaction, receipt);
-          });
+          return getTransactionReceipt(transaction, lastBlockNumber).then(
+            (receipt) => {
+              handleReceipt(transaction, receipt);
+            }
+          );
         });
 
       const oracletransactionsToCheckPromises = Object.values(
@@ -175,9 +179,11 @@ export function useCheckTransactions<
           );
         })
         .map((transaction) => {
-          return getOracleTransactionReceipt(transaction).then((receipt) => {
-            handleOracleReceipt(transaction, receipt);
-          });
+          return getOracleTransactionReceipt(transaction, lastBlockNumber).then(
+            (receipt) => {
+              handleOracleReceipt(transaction, receipt);
+            }
+          );
         });
 
       await Promise.all([
