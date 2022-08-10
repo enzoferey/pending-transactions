@@ -104,6 +104,22 @@ describe("usePendingTransactions", () => {
       });
     });
 
+    expect(result.current).toEqual({
+      state: mockedState,
+      getAllChainTransactions: mockGetAllChainTransactions,
+      getChainTransaction: mockGetChainTransaction,
+      matchIsTransactionPending: mockMatchIsTransactionPending,
+      matchIsTransactionConfirmed: mockMatchIsTransactionConfirmed,
+      matchIsOracleTransactionPending: mockMatchIsOracleTransactionPending,
+      matchIsOracleTransactionConfirmed: mockMatchIsOracleTransactionConfirmed,
+      addTransaction: mockAddTransaction,
+      addOracleTransaction: mockAddOracleTransaction,
+      updateTransactionLastChecked: mockUpdateTransactionLastChecked,
+      confirmTransaction: mockConfirmTransaction,
+      confirmOracleTransaction: mockConfirmOracleTransaction,
+      clearAllChainTransactions: mockClearAllChainTransactions,
+    });
+
     expect(useTransactionsState).toHaveBeenCalledTimes(1);
     expect(useTransactionsState).toHaveBeenCalledWith({
       storageKey,
