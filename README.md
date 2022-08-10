@@ -2,7 +2,7 @@
 
 ![Tests](https://github.com/enzoferey/pending-transactions/actions/workflows/test.yml/badge.svg)
 [![npm version](https://badge.fury.io/js/@enzoferey%2Fpending-transactions.svg)](https://badge.fury.io/js/@enzoferey%2Fpending-transactions)
-[![codecov](????)](!!!!)
+[![codecov](https://codecov.io/gh/enzoferey/pending-transactions/branch/main/graph/badge.svg?token=GD1ISEL9JO)](https://codecov.io/gh/enzoferey/pending-transactions)
 
 Manage pending transactions with ease ⏳
 
