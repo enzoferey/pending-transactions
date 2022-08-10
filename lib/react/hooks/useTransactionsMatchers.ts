@@ -58,7 +58,7 @@ export function useTransactionsMatchers(options: Options): ReturnValue {
   const matchIsOracleTransactionPending =
     React.useCallback<MatchIsOracleTransactionConfirmed>(
       (transactionHash) => {
-        return matchers.matchIsOracleTransactionConfirmed(
+        return matchers.matchIsOracleTransactionPending(
           state,
           chainId,
           transactionHash

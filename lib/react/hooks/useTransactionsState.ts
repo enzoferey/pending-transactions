@@ -39,29 +39,6 @@ export function useTransactionsState<
     );
   }, [storageKey, storageService]);
 
-  // Sync state when local storage key changes on other documents
-  React.useEffect(() => {
-    if (storageKey === undefined || storageService === undefined) {
-      return;
-    }
-
-    const listener = (event: StorageEvent) => {
-      if (event.key !== storageKey) {
-        return;
-      }
-
-      setState(
-        getTransactionsStateFromStorageService(storageKey, storageService)
-      );
-    };
-
-    window.addEventListener("storage", listener);
-
-    return () => {
-      window.removeEventListener("storage", listener);
-    };
-  }, [storageKey, storageService]);
-
   const value = React.useMemo<ReturnValue<TransactionInfo>>(() => {
     return {
       state,

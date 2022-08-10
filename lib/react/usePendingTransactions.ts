@@ -115,12 +115,12 @@ export function usePendingTransactions<
   useCheckTransactions<TransactionInfo>({
     chainId,
     lastBlockNumber,
-    storageKey,
-    storageService,
-    setState,
     getAllChainTransactions,
     getTransactionReceipt,
     getOracleTransactionReceipt,
+    updateTransactionLastChecked,
+    confirmTransaction,
+    confirmOracleTransaction,
     onSuccess,
     onFailure,
   });
