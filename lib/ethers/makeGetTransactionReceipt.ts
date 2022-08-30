@@ -2,7 +2,7 @@ import type { providers } from "ethers";
 
 import type { Transaction, TransactionReceipt } from "../types";
 
-export function makeEthersTransactionReceipt(
+export function makeGetTransactionReceipt(
   provider: providers.Provider
 ): (transaction: Transaction) => Promise<TransactionReceipt | undefined> {
   return (transaction) => {

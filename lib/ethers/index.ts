@@ -1,2 +1,2 @@
-export { makeEthersTransactionReceipt } from "./makeEthersTransactionReceipt";
+export { makeGetTransactionReceipt } from "./makeGetTransactionReceipt";
 export { useLastBlockNumber } from "./useLastBlockNumber";
