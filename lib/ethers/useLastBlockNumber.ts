@@ -4,14 +4,20 @@ import type { providers } from "ethers";
 import { useIsWindowActive } from "../hooks/useIsWindowActive";
 import { useIsOnline } from "../hooks/useIsOnline";
 
-export function useLastBlockNumber(provider: providers.Provider): number {
+export function useLastBlockNumber(
+  provider: providers.Provider | undefined
+): number {
   const [lastBlockNumber, setLastBlockNumber] = React.useState<number>(0);
 
   const isWindowActive = useIsWindowActive();
   const isOnline = useIsOnline();
 
   React.useEffect(() => {
-    if (isWindowActive === false || isOnline === false) {
+    if (
+      provider === undefined ||
+      isWindowActive === false ||
+      isOnline === false
+    ) {
       return;
     }
 
