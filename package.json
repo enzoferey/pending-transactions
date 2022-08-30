@@ -1,0 +1,83 @@
+{
+  "name": "@enzoferey/pending-transactions",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/enzoferey/pending-transactions",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enzoferey/pending-transactions.git"
+  },
+  "keywords": [
+    "pending",
+    "transactions",
+    "blockchain",
+    "react"
+  ],
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/pending-transactions.umd.cjs",
+  "module": "./dist/pending-transactions.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/pending-transactions.js",
+      "require": "./dist/pending-transactions.umd.cjs"
+    },
+    "./react": {
+      "import": "./dist/pending-transactions-react.js",
+      "require": "./dist/pending-transactions-react.umd.cjs"
+    },
+    "./ethers": {
+      "import": "./dist/pending-transactions-ethers.js",
+      "require": "./dist/pending-transactions-ethers.umd.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/index.d.ts"
+      ],
+      "react": [
+        "./dist/react/index.d.ts"
+      ],
+      "ethers": [
+        "./dist/ethers/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc && vite build && vite build --config vite.react.config.js --emptyOutDir false && vite build --config vite.ethers.config.js --emptyOutDir false",
+    "prepublishOnly": "yarn build",
+    "ts:check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint lib --max-warnings 0",
+    "test": "vitest",
+    "test:ci": "vitest --coverage --run"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^13.3.0",
+    "@types/react": "^18.0.17",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
+    "c8": "^7.12.0",
+    "eslint": "^8.21.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "ethers": "^5.6.9",
+    "jsdom": "^20.0.0",
+    "prettier": "2.7.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.7.4",
+    "vite": "^3.0.5",
+    "vite-plugin-dts": "^1.4.1",
+    "vitest": "^0.21.1"
+  }
+}
