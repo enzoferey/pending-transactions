@@ -10,9 +10,9 @@ import {
   MOCK_TRANSACTION_HASH_1,
 } from "../../test-utils";
 
-import { getTransactionReceipt } from "../getTransactionReceipt";
+import { makeEthersTransactionReceipt } from "../makeEthersTransactionReceipt";
 
-describe("getTransactionReceipt", () => {
+describe("makeEthersTransactionReceipt", () => {
   it("should return a function that enables querying the transaction receipt for a successful given transaction", async () => {
     const receipt = {
       from: MOCK_ADDRESS_1,
@@ -26,14 +26,16 @@ describe("getTransactionReceipt", () => {
     };
 
     const provider = {
-      getTransactionReceipt: () => {
+      makeEthersTransactionReceipt: () => {
         return new Promise((resolve) => {
           resolve(receipt);
         });
       },
     } as unknown as providers.Provider;
 
-    const result = await getTransactionReceipt(provider)(MOCK_TRANSACTION);
+    const result = await makeEthersTransactionReceipt(provider)(
+      MOCK_TRANSACTION
+    );
 
     expect(result).toEqual({
       from: receipt.from,
@@ -59,14 +61,16 @@ describe("getTransactionReceipt", () => {
     };
 
     const provider = {
-      getTransactionReceipt: () => {
+      makeEthersTransactionReceipt: () => {
         return new Promise((resolve) => {
           resolve(receipt);
         });
       },
     } as unknown as providers.Provider;
 
-    const result = await getTransactionReceipt(provider)(MOCK_TRANSACTION);
+    const result = await makeEthersTransactionReceipt(provider)(
+      MOCK_TRANSACTION
+    );
 
     expect(result).toEqual({
       from: receipt.from,
@@ -81,14 +85,16 @@ describe("getTransactionReceipt", () => {
   });
   it("should return undefined if the transaction has not been executed yet", async () => {
     const provider = {
-      getTransactionReceipt: () => {
+      makeEthersTransactionReceipt: () => {
         return new Promise((resolve) => {
           resolve(null);
         });
       },
     } as unknown as providers.Provider;
 
-    const result = await getTransactionReceipt(provider)(MOCK_TRANSACTION);
+    const result = await makeEthersTransactionReceipt(provider)(
+      MOCK_TRANSACTION
+    );
 
     expect(result).toBe(undefined);
   });
