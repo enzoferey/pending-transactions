@@ -15,26 +15,26 @@ interface Options<TransactionInfo extends BaseTransactionInfo> {
 }
 
 export type AddTransaction<TransactionInfo extends BaseTransactionInfo> = (
-  payloads: actions.AddTransactionPayload<TransactionInfo>
+  payload: actions.AddTransactionPayload<TransactionInfo>
 ) => void;
 
 export type AddOracleTransaction<TransactionInfo extends BaseTransactionInfo> =
-  (payloads: actions.AddOracleTransactionPayload<TransactionInfo>) => void;
+  (payload: actions.AddOracleTransactionPayload<TransactionInfo>) => void;
 
 export type UpdateTransactionLastChecked = (
-  payloads: actions.UpdateTransactionLastCheckedPayload
+  payload: actions.UpdateTransactionLastCheckedPayload
 ) => void;
 
 export type ConfirmTransaction = (
-  payloads: actions.ConfirmTransactionPayload
+  payload: actions.ConfirmTransactionPayload
 ) => void;
 
 export type ConfirmOracleTransaction = (
-  payloads: actions.ConfirmOracleTransactionPayload
+  payload: actions.ConfirmOracleTransactionPayload
 ) => void;
 
 export type ClearAllChainTransactions = (
-  payloads: actions.ClearAllChainTransactionsPayload
+  payload: actions.ClearAllChainTransactionsPayload
 ) => void;
 
 interface ReturnValue<TransactionInfo extends BaseTransactionInfo> {
