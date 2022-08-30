@@ -1,4 +1,5 @@
 import type {
+  ChainId,
   BaseTransactionInfo,
   Transaction,
   TransactionsState,
@@ -10,7 +11,7 @@ import { getValueOrDefault } from "../../utils/getValueOrDefault";
 export interface AddTransactionPayload<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
 > {
-  chainId: number;
+  chainId: ChainId;
   from: string;
   hash: string;
   info: TransactionInfo;

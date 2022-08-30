@@ -1,7 +1,11 @@
-import type { BaseTransactionInfo, TransactionsState } from "../../types";
+import type {
+  ChainId,
+  BaseTransactionInfo,
+  TransactionsState,
+} from "../../types";
 
 export interface UpdateTransactionLastCheckedPayload {
-  chainId: number;
+  chainId: ChainId;
   hash: string;
   blockNumber: number;
 }

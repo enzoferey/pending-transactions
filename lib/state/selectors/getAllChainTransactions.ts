@@ -1,4 +1,5 @@
 import type {
+  ChainId,
   BaseTransactionInfo,
   ChainTransactionsState,
   TransactionsState,
@@ -10,7 +11,7 @@ export function getAllChainTransactions<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
 >(
   transactionsState: TransactionsState<TransactionInfo>,
-  chainId: number
+  chainId: ChainId
 ): ChainTransactionsState<TransactionInfo> {
   return getValueOrDefault(transactionsState[chainId], {});
 }

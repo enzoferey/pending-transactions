@@ -1,4 +1,5 @@
 import type {
+  ChainId,
   BaseTransactionInfo,
   TransactionReceipt,
   TransactionsState,
@@ -7,7 +8,7 @@ import type {
 import { getNow } from "../../utils/getNow";
 
 export interface ConfirmTransactionPayload {
-  chainId: number;
+  chainId: ChainId;
   hash: string;
   receipt: TransactionReceipt;
 }

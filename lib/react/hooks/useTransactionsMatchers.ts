@@ -1,12 +1,12 @@
 import React from "react";
 
-import type { TransactionsState } from "../../types";
+import type { ChainId, TransactionsState } from "../../types";
 
 import * as matchers from "../../state/matchers";
 
 interface Options {
   state: TransactionsState;
-  chainId: number;
+  chainId: ChainId;
 }
 
 export type MatchIsTransactionPending = (transactionHash: string) => boolean;

@@ -1,6 +1,7 @@
 import React from "react";
 
 import type {
+  ChainId,
   BaseTransactionInfo,
   ChainTransactionsState,
   OracleTransaction,
@@ -14,7 +15,7 @@ import { useIsWindowActive } from "../../hooks/useIsWindowActive";
 import * as utils from "../../state/utils";
 
 interface Options<TransactionInfo extends BaseTransactionInfo> {
-  chainId: number;
+  chainId: ChainId;
   lastBlockNumber: number;
   getAllChainTransactions: () => ChainTransactionsState<TransactionInfo>;
   getTransactionReceipt: (
@@ -26,17 +27,17 @@ interface Options<TransactionInfo extends BaseTransactionInfo> {
     blockNumber: number
   ) => Promise<TransactionReceipt | undefined>;
   updateTransactionLastChecked: (payload: {
-    chainId: number;
+    chainId: ChainId;
     hash: string;
     blockNumber: number;
   }) => void;
   confirmTransaction: (payload: {
-    chainId: number;
+    chainId: ChainId;
     hash: string;
     receipt: TransactionReceipt;
   }) => void;
   confirmOracleTransaction: (payload: {
-    chainId: number;
+    chainId: ChainId;
     hash: string;
     oracleReceipt: TransactionReceipt;
   }) => void;

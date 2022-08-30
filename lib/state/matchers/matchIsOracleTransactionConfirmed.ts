@@ -1,11 +1,11 @@
-import type { TransactionsState } from "../../types";
+import type { ChainId, TransactionsState } from "../../types";
 
 import * as selectors from "../selectors";
 import * as utils from "../utils";
 
 export function matchIsOracleTransactionConfirmed(
   transactionsState: TransactionsState,
-  chainId: number,
+  chainId: ChainId,
   transactionHash: string
 ): boolean {
   const transaction = selectors.getChainTransaction(

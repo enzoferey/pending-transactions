@@ -1,6 +1,7 @@
 import React from "react";
 
 import type {
+  ChainId,
   BaseTransactionInfo,
   ChainTransactionsState,
   OracleTransaction,
@@ -12,7 +13,7 @@ import * as selectors from "../../state/selectors";
 
 interface Options<TransactionInfo extends BaseTransactionInfo> {
   state: TransactionsState<TransactionInfo>;
-  chainId: number;
+  chainId: ChainId;
 }
 
 export type GetAllChainTransactions<

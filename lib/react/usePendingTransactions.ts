@@ -1,6 +1,7 @@
 import React from "react";
 
 import type {
+  ChainId,
   TransactionsState,
   Transaction,
   BaseTransactionInfo,
@@ -35,7 +36,7 @@ import {
 import { useCheckTransactions } from "./hooks/useCheckTransactions";
 
 interface Options<TransactionInfo extends BaseTransactionInfo> {
-  chainId: number;
+  chainId: ChainId;
   lastBlockNumber: number;
   storageKey?: string;
   storageService?: StorageService;

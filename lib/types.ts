@@ -1,3 +1,5 @@
+export type ChainId = string | number;
+
 export interface TransactionReceipt {
   from: string;
   to: string;
@@ -44,5 +46,5 @@ export interface ChainTransactionsState<
 export interface TransactionsState<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
 > {
-  [chainId: number]: ChainTransactionsState<TransactionInfo>;
+  [chainId: ChainId]: ChainTransactionsState<TransactionInfo>;
 }

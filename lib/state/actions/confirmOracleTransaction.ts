@@ -1,4 +1,5 @@
 import type {
+  ChainId,
   BaseTransactionInfo,
   TransactionReceipt,
   TransactionsState,
@@ -9,7 +10,7 @@ import { getNow } from "../../utils/getNow";
 import * as utils from "../utils";
 
 export interface ConfirmOracleTransactionPayload {
-  chainId: number;
+  chainId: ChainId;
   hash: string;
   oracleReceipt: TransactionReceipt;
 }

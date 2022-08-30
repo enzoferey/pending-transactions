@@ -1,4 +1,5 @@
 import type {
+  ChainId,
   BaseTransactionInfo,
   OracleTransaction,
   Transaction,
@@ -11,7 +12,7 @@ export function getChainTransaction<
   TransactionInfo extends BaseTransactionInfo = BaseTransactionInfo
 >(
   transactionsState: TransactionsState<TransactionInfo>,
-  chainId: number,
+  chainId: ChainId,
   transactionHash: string
 ):
   | Transaction<TransactionInfo>
